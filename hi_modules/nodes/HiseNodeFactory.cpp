@@ -94,6 +94,7 @@ Factory::Factory(DspNetwork* network) :
 	registerNode<mono2stereo>({});
 	registerNode<table>();
 	registerNode<fix_delay>();
+	registerNode<etxzat::etxzat_node>();
 	registerNode<file_player>();
 	registerNode<hise_mod>();
 	registerNode<fm>();

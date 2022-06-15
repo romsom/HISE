@@ -9,3 +9,6 @@
 
 #include "nodes/RoutingNodes.h"
 #include "nodes/RoutingNodes.cpp"
+
+#include "nodes/EtxzatNode.h"
+#include "nodes/EtxzatNode.cpp"

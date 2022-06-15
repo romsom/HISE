@@ -267,6 +267,8 @@ If enabled, HISE will include the hardcoded nodes found at the specified locatio
 #include "nodes/RoutingNodes.h"
 #include "nodes/DelayNode.h"
 
+#include "nodes/EtxzatNode.h"
+
 #include "nodes/MetaNodes.h"
 
 #endif   // HI_MODULES_INCLUDED

@@ -1683,7 +1683,7 @@ Factory::Factory(DspNetwork* network) :
 #endif
 
 #if HISE_INCLUDE_FAUST
-	// registerNode<faust::faust_node>();
+	registerNodeRaw<faust::faust_node>();
 #endif // HISE_INCLUDE_FAUST
 
 	registerModNode<dp<extra_mod>, data::ui::displaybuffer_editor>();

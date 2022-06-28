@@ -37,17 +37,20 @@ BEGIN_JUCE_MODULE_DECLARATION
 
   ID:               hi_faust
   vendor:           Hart Instruments
-  version:          2.0.0
-  name:             HISE Processor Modules
+  version:          0.0.1
+  name:             HISE Faust Integration
   description:      All processors for HISE
   website:          http://hise.audio
-  license:          GPL / Commercial
+  license:          GPL
 
   dependencies:      hi_dsp_library
 
 END_JUCE_MODULE_DECLARATION
 
 ******************************************************************************/
+#ifndef HI_FAUST_INCLUDED
+#define HI_FAUST_INCLUDED
+
 /** Config: HISE_INCLUDE_FAUST
 
 Enables the Faust Compiler
@@ -60,3 +63,5 @@ Enables the Faust Compiler
 #if HISE_INCLUDE_FAUST
 #include "FaustNode.h"
 #endif // HISE_INCLUDE_FAUST
+
+#endif // HI_FAUST_INCLUDED

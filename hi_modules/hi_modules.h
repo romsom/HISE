@@ -42,7 +42,7 @@ BEGIN_JUCE_MODULE_DECLARATION
   website:          http://hise.audio
   license:          GPL / Commercial
 
-  dependencies:      juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_core, juce_cryptography, juce_data_structures, juce_events, juce_graphics, juce_gui_basics, juce_gui_extra, hi_core, hi_dsp, hi_components, hi_scripting, hi_sampler
+  dependencies:      juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_core, juce_cryptography, juce_data_structures, juce_events, juce_graphics, juce_gui_basics, juce_gui_extra, hi_core, hi_dsp, hi_components, hi_scripting, hi_sampler, hi_faust
 
 END_JUCE_MODULE_DECLARATION
 
@@ -246,17 +246,5 @@ END_JUCE_MODULE_DECLARATION
 #include "nodes/MetaNodes.h"
 #include "nodes/snex_library/snex_NodeLibrary.h"
 
-/** Config: HISE_INCLUDE_FAUST
-
-Enables the Faust Compiler
-*/
-#ifndef HISE_INCLUDE_FAUST
-#define HISE_INCLUDE_FAUST 1
-#endif // HISE_INCLUDE_FAUST
-
-
-#if HISE_INCLUDE_FAUST
-#include "faust/FaustNode.h"
-#endif // HISE_INCLUDE_FAUST
 
 #endif   // HI_MODULES_INCLUDED

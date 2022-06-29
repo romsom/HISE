@@ -45,6 +45,8 @@ BEGIN_JUCE_MODULE_DECLARATION
 
   dependencies:      hi_dsp_library
 
+  linuxLibs: faust
+
 END_JUCE_MODULE_DECLARATION
 
 ******************************************************************************/

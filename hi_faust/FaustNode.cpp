@@ -1,8 +1,57 @@
 #include <faust/dsp/llvm-dsp.h>
 namespace scriptnode {
 namespace faust {
+    // wrapper struct for faust types to avoid name-clash
+    struct faust_wrapper {
+
+	faust_wrapper():
+	    sampleRate(0),
+	    jitFactory(nullptr),
+	    jitDsp(nullptr)
+	{ }
+	
+	std::string code;
+	std::string errorMessage;
+	int jitOptimize = 0; // -1 is maximum optimization
+	int sampleRate;
+	llvm_dsp_factory* jitFactory;
+	dsp *jitDsp;
+
+	void recompile() {
+	    // cleanup old code and factories
+	    if (jitDsp != nullptr) {
+		delete jitDsp;
+	    }
+	    if (jitFactory != nullptr) {
+		deleteDSPFactory(jitFactory);
+	    }
+
+	    int llvm_argc = 0;
+	    const char* llvm_argv[] = {nullptr};
+
+	    jitFactory = createDSPFactoryFromString("faust", code, llvm_argc, llvm_argv, "",
+						      errorMessage, jitOptimize);
+	    if (jitFactory == nullptr) {
+		// TODO error indication
+		return;
+	    }
+
+	    jitDsp = jitFactory->createDSPInstance();
+	    if (jitDsp == nullptr) {
+		// TODO error indication
+		return;
+	    }
+	}
+    };
     // faust_node::faust_node(DspNetwork* n, ValueTree v) :
     // 	NodeBase(n, v, 0) { }
+    faust_node::faust_node(DspNetwork* n, ValueTree v) :
+	NodeBase(n, v, 0),
+	faust(new faust_wrapper)
+	{
+	    // dummy code for now:
+	    faust->code = "import(\"stdfaust.lib\"); d(x) = x + X@10000; process = d";
+	}
 
     void faust_node::initialise(NodeBase* n)
     { }
@@ -12,10 +61,10 @@ namespace faust {
       lastSpecs = specs;
       // recompile if sample rate changed
       int newSampleRate = (int)specs.sampleRate;
-      if (newSampleRate != sampleRate) {
-	sampleRate = newSampleRate;
+      if (newSampleRate != faust->sampleRate) {
+	faust->sampleRate = newSampleRate;
 	// recompile
-	
+	faust->recompile();
       }
     }
 
@@ -38,32 +87,6 @@ namespace faust {
 	auto mc = n->getScriptProcessor()->getMainController_();
 	auto dspRoot = mc->getCurrentFileHandler().getSubDirectory(FileHandlerBase::DspNetworks);
 	return dspRoot.getChildFile("CodeLibrary/faust");
-    }
-
-    void faust_node::recompileFaustCode() {
-	// cleanup old code and factories
-	if (faustDsp != nullptr) {
-	    delete faustDsp;
-	}
-	if (faustFactory != nullptr) {
-	    deleteDSPFactory(faustFactory);
-	}
-
-	int llvm_argc = 0;
-	const char* llvm_argv[] = {nullptr};
-
-	faustFactory = createDSPFactoryFromString("faust", faustCode, llvm_argc, llvm_argv, "",
-						  faustErrorMessage, faustJitOptimize);
-	if (faustFactory == nullptr) {
-	    // TODO error indication
-	    return;
-	}
-
-	faustDsp = faustFactory->createDSPInstance();
-	if (faustDsp == nullptr) {
-	    // TODO error indication
-	    return;
-	}
     }
 }
 }

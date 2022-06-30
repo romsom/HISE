@@ -19,6 +19,15 @@ struct faust_node: public scriptnode::NodeBase {
 private:
     void recompileFaustCode();
     std::unique_ptr<faust_wrapper> faust;
+    int _nChannels;
+    int _nFramesMax;
+    std::vector<float> inputBuffer;
+    std::vector<float*> inputChannelPointers;
+    void resizeBuffer();
+    float** getRawInputChannelPointers() {
+	return &inputChannelPointers[0];
+    }
+    void bufferChannelsData(float** channels, int nChannels, int nFrames);
 };
 }
 }

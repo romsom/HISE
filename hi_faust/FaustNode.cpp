@@ -175,5 +175,33 @@ namespace faust {
 	}
     }
 
+
+    faust_node::FaustMenuBar::FaustMenuBar(faust_node *n) :
+	addButton("add", this, factory),
+	editButton("snex", this, factory)
+	// node(n)
+    {
+
+    }
+
+    juce::Path faust_node::FaustMenuBar::Factory::createPath(const String& url) const
+    {
+	if (url == "snex")
+	{
+	    snex::ui::SnexPathFactory f;
+	    return f.createPath(url);
+	}
+
+	Path p;
+
+	LOAD_PATH_IF_URL("new", ColumnIcons::threeDots);
+	LOAD_PATH_IF_URL("edit", ColumnIcons::openWorkspaceIcon);
+	LOAD_PATH_IF_URL("compile", EditorIcons::compileIcon);
+	LOAD_PATH_IF_URL("reset", EditorIcons::swapIcon);
+	LOAD_PATH_IF_URL("add", ColumnIcons::threeDots);
+
+	return p;
+    }
+
 }
 }

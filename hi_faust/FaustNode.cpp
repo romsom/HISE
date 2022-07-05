@@ -39,7 +39,7 @@ namespace faust {
 	    const char* llvm_argv[] = {nullptr};
 
 	    jitFactory = ::faust::createDSPFactoryFromString("faust", code, llvm_argc, llvm_argv, "",
-						      errorMessage, jitOptimize);
+							     errorMessage, jitOptimize);
 	    if (jitFactory == nullptr) {
 		// TODO error indication
 		std::cout << "Faust jit compilation failed:" << std::endl
@@ -126,6 +126,8 @@ namespace faust {
 		// in-place processing
 		bufferChannelsData(channel_data, n_hise_channels, nFrames);
 		faust->jitDsp->compute(nFrames, getRawInputChannelPointers(), channel_data);
+	    } else {
+		// TODO error indication
 	    }
 	} else {
 	    // std::cout << "Faust: dsp was not initialized" << std::endl;

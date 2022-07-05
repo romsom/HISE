@@ -1,7 +1,12 @@
 #include <faust_wrap/dsp/llvm-dsp.h>
+#include <faust_wrap/gui/UI.h>
 
 namespace scriptnode {
 namespace faust {
+    struct faust_ui : ::faust::UI {
+
+    };
+    
     // wrapper struct for faust types to avoid name-clash
     struct faust_wrapper {
 

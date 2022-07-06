@@ -46,6 +46,8 @@ namespace faust {
 		step(step) {}
 	};
 
+	faust_ui() { }
+
 	std::vector<std::shared_ptr<Parameter>> parameters;
 
 	std::optional<std::shared_ptr<Parameter>> getParameterByLabel(String label)
@@ -70,6 +72,13 @@ namespace faust {
 
 	    return res;
 	}
+	
+        // -- metadata declarations
+
+	virtual void declare(float* zone, const char* key, const char* val) override
+	{
+	    // TODO
+	}
 
 	// Faust UI implementation
 
@@ -85,7 +94,7 @@ namespace faust {
 	{
 
 	}
-	// virtual void closeBox() override { }
+	virtual void closeBox() override { }
 	
 	// -- active widgets
 	
@@ -164,6 +173,10 @@ namespace faust {
 								 1.f));
 	}
 	
+	// -- soundfiles -- TODO
+
+	virtual void addSoundfile(const char* label, const char* filename, ::faust::Soundfile** sf_zone) { }
+	
     };
     
     // wrapper struct for faust types to avoid name-clash
@@ -189,6 +202,7 @@ namespace faust {
 	int sampleRate;
 	::faust::llvm_dsp_factory* jitFactory;
 	::faust::dsp *jitDsp;
+	faust_ui ui;
 
 	bool setup() {
 	    // cleanup old code and factories
@@ -218,6 +232,15 @@ namespace faust {
 	    }
 
 	    std::cout << "Faust DSP instantiation successful" << std::endl;
+
+	    jitDsp->buildUserInterface(&ui);
+
+
+	    DBG("Faust parameters:");
+	    for (auto p : ui.getParameterLabels()) {
+		DBG(p);
+	    }
+
 	    return true;
 	}
 

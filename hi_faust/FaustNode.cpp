@@ -310,6 +310,20 @@ namespace faust {
 	    std::cout << "Faust initialization: " << (success ? "success" : "failed") << std::endl;
 	    // TODO: error handling
 
+	    // setup parameters from faust code
+	    for (auto p : faust->ui.parameters)
+	    {
+		switch (p->type) {
+		case faust_ui::ControlType::VERTICAL_SLIDER:
+		case faust_ui::ControlType::HORIZONTAL_SLIDER:
+		{
+		    DBG("adding parameter " << p->label);
+		    parameter::data pd(p->label, {(double)(p->min), (double)(p->max)});
+		    pd.setDefaultValue((double)(p->init));
+		    addNewParameter(pd);
+		}
+		}
+	    }
             // we can't init yet, because we don't know the sample rate
 	}
 
@@ -430,6 +444,15 @@ namespace faust {
 	LOAD_PATH_IF_URL("add", ColumnIcons::threeDots);
 
 	return p;
+    }
+
+    void faust_node::addNewParameter(parameter::data p)
+    {
+	if (auto existing = getParameterFromName(p.info.getId()))
+		return;
+
+	auto newTree = p.createValueTree();
+	getParameterTree().addChild(newTree, -1, getUndoManager());
     }
 
 }

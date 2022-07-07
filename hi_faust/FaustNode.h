@@ -35,6 +35,8 @@ struct faust_node: public scriptnode::NodeBase {
     static NodeBase* createNode(DspNetwork* n, ValueTree v);
     File getFaustRootFile(NodeBase* n);
 
+    void addNewParameter(parameter::data p);
+
 private:
     void recompileFaustCode();
     std::unique_ptr<faust_wrapper> faust;

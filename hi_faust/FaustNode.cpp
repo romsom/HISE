@@ -418,13 +418,32 @@ namespace faust {
 	}
     }
 
+    scriptnode::NodeComponent* faust_node::createComponent()
+    {
+	auto nc = ComponentHelpers::createDefaultComponent(this);
+	ComponentHelpers::addExtraComponentToDefault(nc, new FaustMenuBar(this));
+
+	return nc;
+    }
+
 
     faust_node::FaustMenuBar::FaustMenuBar(faust_node *n) :
 	addButton("add", this, factory),
-	editButton("snex", this, factory)
-	// node(n)
+	editButton("faust", this, factory),
+	node(n)
     {
+	addAndMakeVisible(addButton);
+	addAndMakeVisible(editButton);
+	setSize(200, 24);
+    }
 
+    void faust_node::FaustMenuBar::buttonClicked(Button* b)
+    {
+	// TODO
+    }
+    void faust_node::FaustMenuBar::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
+    {
+	// TODO
     }
 
     juce::Path faust_node::FaustMenuBar::Factory::createPath(const String& url) const

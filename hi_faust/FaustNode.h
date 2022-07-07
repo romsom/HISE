@@ -7,21 +7,26 @@ struct faust_wrapper;
 
 struct faust_node: public scriptnode::NodeBase {
     SET_HISE_NODE_ID("faust");
+    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node);
 
     struct FaustMenuBar : public Component,
-			 public ButtonListener,
-			 public ComboBox::Listener
+			  public ButtonListener,
+			  public ComboBox::Listener
 
     {
 
 	FaustMenuBar(faust_node *n);
-	HiseShapeButton addButton;
-	HiseShapeButton editButton;
 	struct Factory : public PathFactory
 	{
 	    Path createPath(const String& p) const override;
 	    String getId() const override { return {}; }
 	} factory;
+
+	HiseShapeButton addButton;
+	HiseShapeButton editButton;
+
+	virtual void buttonClicked(Button* b) override;
+	virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
 
 	WeakReference<faust_node> node;
     };
@@ -33,6 +38,7 @@ struct faust_node: public scriptnode::NodeBase {
     virtual void process(ProcessDataDyn& data) override;
     virtual void processFrame(FrameType& data) override;
     static NodeBase* createNode(DspNetwork* n, ValueTree v);
+    virtual scriptnode::NodeComponent* createComponent() override;
     File getFaustRootFile(NodeBase* n);
 
     void addNewParameter(parameter::data p);
@@ -44,7 +50,6 @@ private:
     int _nFramesMax;
     std::vector<float> inputBuffer;
     std::vector<float*> inputChannelPointers;
-    //FaustMenuBar menuBar;
     void resizeBuffer();
     float** getRawInputChannelPointers() {
 	return &inputChannelPointers[0];

@@ -22,6 +22,7 @@ struct faust_node: public scriptnode::NodeBase {
 	    String getId() const override { return {}; }
 	} factory;
 
+	ComboBox sourceSelector;
 	HiseShapeButton addButton;
 	HiseShapeButton editButton;
 

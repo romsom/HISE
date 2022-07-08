@@ -433,9 +433,11 @@ namespace faust {
 	editButton("faust", this, factory),
 	node(n)
     {
+
+	setSize(200, 24);
+	addAndMakeVisible(sourceSelector);
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(editButton);
-	setSize(200, 24);
     }
 
     void faust_node::FaustMenuBar::buttonClicked(Button* b)

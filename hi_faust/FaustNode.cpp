@@ -440,6 +440,19 @@ namespace faust {
 	addAndMakeVisible(editButton);
     }
 
+    void faust_node::FaustMenuBar::resized()
+    {
+	auto b = getLocalBounds().reduced(0, 1);
+	auto h = getHeight();
+
+	addButton.setBounds(b.removeFromLeft(h-4));
+	sourceSelector.setBounds(b.removeFromLeft(100));
+	b.removeFromLeft(3);
+	editButton.setBounds(getLocalBounds().removeFromRight(80).reduced(2));
+
+	b.removeFromLeft(10);
+    }
+
     void faust_node::FaustMenuBar::buttonClicked(Button* b)
     {
 	// TODO

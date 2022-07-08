@@ -28,6 +28,7 @@ struct faust_node: public scriptnode::NodeBase {
 
 	virtual void buttonClicked(Button* b) override;
 	virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
+	virtual void resized() override;
 
 	WeakReference<faust_node> node;
     };

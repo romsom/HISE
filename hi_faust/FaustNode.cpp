@@ -324,6 +324,7 @@ namespace faust {
 		}
 		}
 	    }
+	    DBG("Num parameters in NodeBase: " << getNumParameters());
             // we can't init yet, because we don't know the sample rate
 	}
 

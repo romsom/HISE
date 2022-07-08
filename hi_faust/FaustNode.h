@@ -5,7 +5,7 @@ namespace faust {
 
 struct faust_wrapper;
 
-struct faust_node: public scriptnode::NodeBase {
+struct faust_node: public scriptnode::WrapperNode {
     SET_HISE_NODE_ID("faust");
     JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node);
 
@@ -44,6 +44,8 @@ struct faust_node: public scriptnode::NodeBase {
     File getFaustRootFile(NodeBase* n);
 
     void addNewParameter(parameter::data p);
+
+    virtual void* getObjectPtr() override { return nullptr; }
 
 private:
     void recompileFaustCode();

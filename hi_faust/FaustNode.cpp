@@ -253,7 +253,7 @@ namespace faust {
     // faust_node::faust_node(DspNetwork* n, ValueTree v) :
     // 	NodeBase(n, v, 0) { }
     faust_node::faust_node(DspNetwork* n, ValueTree v) :
-	NodeBase(n, v, 0),
+	WrapperNode(n, v),
 	faust(new faust_wrapper)
 	{
 	    // dummy code for now:

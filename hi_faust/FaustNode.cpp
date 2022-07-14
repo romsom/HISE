@@ -294,6 +294,10 @@ namespace faust {
 	WrapperNode(n, v),
 	faust(new faust_wrapper)
 	{
+		extraComponentFunction = [](void* o, PooledUIUpdater* u)
+		{
+			return new FaustMenuBar(static_cast<faust_node*>(o));
+		};
 	    // dummy code for now:
 	    faust->code =
 		"import(\"math.lib\");\n"
@@ -345,6 +349,16 @@ namespace faust {
 		"";
 	    // setup dsp
 	    bool success = faust->setup();
+
+		if (!success)
+		{
+			auto p = dynamic_cast<Processor*>(getScriptProcessor());
+
+			debugError(p, "FaustError");
+
+			
+		}
+
 	    std::cout << "Faust initialization: " << (success ? "success" : "failed") << std::endl;
 	    // TODO: error handling
 
@@ -372,6 +386,13 @@ namespace faust {
 
     void faust_node::prepare(PrepareSpecs specs)
     {
+		String error(faust->errorMessage);
+
+		
+
+		if(!error.isEmpty())
+			getRootNetwork()->getExceptionHandler().addCustomError(this, Error::InitialisationError, error);
+
 	lastSpecs = specs;
 	// recompile if sample rate changed
 	int newSampleRate = (int)specs.sampleRate;

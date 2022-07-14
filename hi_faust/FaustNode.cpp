@@ -6,7 +6,7 @@
 namespace scriptnode {
 namespace faust {
     struct faust_ui : public ::faust::UI {
-	enum CONTROL_TYPE {
+	enum ControlType {
 	    NONE = 0,
 	    BUTTON,
 	    CHECK_BUTTON,
@@ -19,7 +19,7 @@ namespace faust {
 	    MIDI,
 	    OTHER=0xffff,
 	};
-	using ControlType = enum CONTROL_TYPE;
+	
 
 	struct Parameter {
 	    ControlType type;
@@ -250,7 +250,45 @@ namespace faust {
 	}
     };
 
-    // faust_node::faust_node(DspNetwork* n, ValueTree v) :
+	static void setFaustZone(void* obj, double value)
+	{
+		*static_cast<float*>(obj) = (float)value;
+	}
+
+	void faust_node::parameterUpdated(ValueTree child, bool wasAdded)
+	{
+		auto index = child.getParent().indexOf(child);
+
+		if (wasAdded)
+		{
+			if (isPositiveAndBelow(index, faust->ui.parameters.size()))
+			{
+				auto idOfValueTree = child[PropertyIds::ID].toString();
+
+				auto p = new scriptnode::Parameter(this, child);
+
+				auto dp = new scriptnode::parameter::dynamic_base();
+
+				dp->f = setFaustZone;
+				dp->obj = faust->ui.parameters[index]->zone;
+
+				void* zonePointer = nullptr;
+
+				scriptnode::parameter::dynamic_base::Ptr dp2;
+				dp2 = dp;
+
+				p->setDynamicParameter((dp));
+
+				NodeBase::addParameter(p);
+			}
+		}
+		else
+		{
+			NodeBase::removeParameter(child.getParent().indexOf(child));
+		}
+	}
+
+	// faust_node::faust_node(DspNetwork* n, ValueTree v) :
     // 	NodeBase(n, v, 0) { }
     faust_node::faust_node(DspNetwork* n, ValueTree v) :
 	WrapperNode(n, v),
@@ -419,20 +457,13 @@ namespace faust {
 	}
     }
 
-    scriptnode::NodeComponent* faust_node::createComponent()
-    {
-	auto nc = ComponentHelpers::createDefaultComponent(this);
-	ComponentHelpers::addExtraComponentToDefault(nc, new FaustMenuBar(this));
-
-	return nc;
-    }
-
 
     faust_node::FaustMenuBar::FaustMenuBar(faust_node *n) :
 	addButton("add", this, factory),
 	editButton("faust", this, factory),
 	node(n)
     {
+		setLookAndFeel(&claf);
 
 	setSize(200, 24);
 	addAndMakeVisible(sourceSelector);

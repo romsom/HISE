@@ -31,7 +31,11 @@ struct faust_node: public scriptnode::WrapperNode {
 	virtual void resized() override;
 
 	WeakReference<faust_node> node;
+
+	hise::ScriptnodeComboBoxLookAndFeel claf;
     };
+
+	void parameterUpdated(ValueTree child, bool wasAdded);
 
     faust_node(DspNetwork* n, ValueTree v);
     void initialise(NodeBase* n);
@@ -40,7 +44,17 @@ struct faust_node: public scriptnode::WrapperNode {
     virtual void process(ProcessDataDyn& data) override;
     virtual void processFrame(FrameType& data) override;
     static NodeBase* createNode(DspNetwork* n, ValueTree v);
-    virtual scriptnode::NodeComponent* createComponent() override;
+
+#if 0
+	virtual scriptnode::NodeComponent* createComponent() override
+	{
+		auto nc = ComponentHelpers::createDefaultComponent(this);
+		ComponentHelpers::addExtraComponentToDefault(nc, new FaustMenuBar(this));
+
+		return nc;
+	}
+#endif
+
     File getFaustRootFile(NodeBase* n);
 
     void addNewParameter(parameter::data p);
@@ -48,6 +62,9 @@ struct faust_node: public scriptnode::WrapperNode {
     virtual void* getObjectPtr() override { return nullptr; }
 
 private:
+
+	valuetree::ChildListener parameterListener;
+
     void recompileFaustCode();
     std::unique_ptr<faust_wrapper> faust;
     int _nChannels;

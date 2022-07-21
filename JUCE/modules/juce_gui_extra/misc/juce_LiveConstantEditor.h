@@ -234,7 +234,7 @@ namespace LiveConstantEditor
         // relative path instead of an absolute path. On Windows this will be
         // a path relative to the build directory rather than the currently
         // running application. To fix this you must compile with the /FC flag.
-        jassert (File::isAbsolutePath (file));
+        //jassert (File::isAbsolutePath (file));
 
         return ValueList::getInstance()->getValue (file, line, initialValue);
     }

@@ -54,6 +54,7 @@
 #define JUCE_MODULE_AVAILABLE_hi_core                     1
 #define JUCE_MODULE_AVAILABLE_hi_dsp                      1
 #define JUCE_MODULE_AVAILABLE_hi_dsp_library              1
+#define JUCE_MODULE_AVAILABLE_hi_faust                    1
 #define JUCE_MODULE_AVAILABLE_hi_lac                      1
 #define JUCE_MODULE_AVAILABLE_hi_modules                  1
 #define JUCE_MODULE_AVAILABLE_hi_rlottie                  1
@@ -116,6 +117,10 @@
 
 #ifndef    USE_COPY_PROTECTION
  #define   USE_COPY_PROTECTION 0
+#endif
+
+#ifndef    USE_SCRIPT_COPY_PROTECTION
+ //#define USE_SCRIPT_COPY_PROTECTION 0
 #endif
 
 #ifndef    USE_IPP
@@ -194,6 +199,10 @@
  //#define READ_ONLY_FACTORY_PRESETS 0
 #endif
 
+#ifndef    CONFIRM_PRESET_OVERWRITE
+ //#define CONFIRM_PRESET_OVERWRITE 1
+#endif
+
 #ifndef    ENABLE_CONSOLE_OUTPUT
  //#define ENABLE_CONSOLE_OUTPUT 1
 #endif
@@ -247,6 +256,13 @@
 
 #ifndef    IS_STATIC_DSP_LIBRARY
  //#define IS_STATIC_DSP_LIBRARY 1
+#endif
+
+//==============================================================================
+// hi_faust flags:
+
+#ifndef    HISE_INCLUDE_FAUST
+ #define   HISE_INCLUDE_FAUST 1
 #endif
 
 //==============================================================================
@@ -436,6 +452,10 @@
 
 #ifndef    JUCE_FORCE_DEBUG
  //#define JUCE_FORCE_DEBUG 0
+#endif
+
+#ifndef    JUCE_ENABLE_AUDIO_GUARD
+ //#define JUCE_ENABLE_AUDIO_GUARD 0
 #endif
 
 #ifndef    JUCE_LOG_ASSERTIONS

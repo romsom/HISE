@@ -73,6 +73,15 @@ namespace faust {
 
 	    return res;
 	}
+
+	float* getZone(String label) {
+	    for (auto p : parameters)
+	    {
+		if (p->label = label)
+		    return p->zone;
+	    }
+	    return nullptr;
+	}
 	
         // -- metadata declarations
 
@@ -310,24 +319,58 @@ namespace faust {
 	    bool success = faust->setup();
 	    std::cout << "Faust initialization: " << (success ? "success" : "failed") << std::endl;
 	    // TODO: error handling
-
-	    // setup parameters from faust code
-	    for (auto p : faust->ui.parameters)
-	    {
-		switch (p->type) {
-		case faust_ui::ControlType::VERTICAL_SLIDER:
-		case faust_ui::ControlType::HORIZONTAL_SLIDER:
+	    if (!success)
 		{
-		    DBG("adding parameter " << p->label);
-		    parameter::data pd(p->label, {(double)(p->min), (double)(p->max)});
-		    pd.setDefaultValue((double)(p->init));
-		    addNewParameter(pd);
-		}
-		}
-	    }
-	    DBG("Num parameters in NodeBase: " << getNumParameters());
+			auto p = dynamic_cast<Processor*>(getScriptProcessor());
+
+			debugError(p, "FaustError");
+		} 
+
+	    parameterListener.setCallback(getParameterTree(),
+					  valuetree:AsyncMode::Synchronously, BIND_MEMBER_FUNCTION_2(parameterUpdated));
+					  
+	    
+	    setupParameters();
             // we can't init yet, because we don't know the sample rate
 	}
+
+    void faust_node::setupParameters()
+    {
+	// setup parameters from faust code
+	for (auto p : faust->ui.parameters)
+	{
+	    switch (p->type) {
+	    case faust_ui::ControlType::VERTICAL_SLIDER:
+	    case faust_ui::ControlType::HORIZONTAL_SLIDER:
+	    {
+		DBG("adding parameter " << p->label);
+		parameter::data pd(p->label, {(double)(p->min), (double)(p->max)});
+		pd.setDefaultValue((double)(p->init));
+		addNewParameter(pd);
+	    }
+	    }
+	}
+	DBG("Num parameters in NodeBase: " << getNumParameters());
+    }
+
+    void faust_node::parameterUpdated(ValueTree child, bool wasAdded)
+    {
+	if (wasAdded)
+	{
+	    auto p = new scriptnode::Parameter(this, child);
+	    auto dp = new scriptnode::parameter::dynamic();
+
+	    dp->referto(zonePointer, setFaustZone);
+	    dp->f = ;
+	    p->setDynamicParameter(dp);
+	    
+	    NodeBase::addParameter(p);
+	}
+	else
+	{
+	    NodeBase::removeParameter(child);
+	}
+    }
 
     void faust_node::initialise(NodeBase* n)
     {

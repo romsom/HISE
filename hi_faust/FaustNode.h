@@ -44,11 +44,16 @@ struct faust_node: public scriptnode::WrapperNode
     virtual scriptnode::NodeComponent* createComponent() override;
     File getFaustRootFile(NodeBase* n);
 
+    void parameterUpdated(ValueTree child, bool wasAdded);
+
     void addNewParameter(parameter::data p);
 
     virtual void* getObjectPtr() override { return nullptr; }
 
+    valuetree::ChildListener parameterListener;
+
 private:
+    void setupParameters();
     void recompileFaustCode();
     std::unique_ptr<faust_wrapper> faust;
     int _nChannels;

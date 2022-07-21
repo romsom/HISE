@@ -2086,7 +2086,7 @@ public:
 	};
 
 
-	using ScreenshotListener = ScreenshotListener;
+	using ScreenshotListener = hise::ScreenshotListener;
 
 	struct VisualGuide
 	{

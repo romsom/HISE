@@ -44,6 +44,7 @@ namespace faust {
 		min(min),
 		max(max),
 		step(step) {}
+
 	};
 
 	faust_ui() { }
@@ -339,7 +340,7 @@ namespace faust {
 	int newSampleRate = (int)specs.sampleRate;
 	if (newSampleRate != faust->sampleRate) {
 	    faust->sampleRate = newSampleRate;
-	    // recompile
+	    // init samplerate
 	    faust->init();
 	}
 

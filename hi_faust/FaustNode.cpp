@@ -463,15 +463,6 @@ namespace faust {
 	}
     }
 
-    scriptnode::NodeComponent* faust_node::createComponent()
-    {
-	auto nc = ComponentHelpers::createDefaultComponent(this);
-	ComponentHelpers::addExtraComponentToDefault(nc, new FaustMenuBar(this));
-
-	return nc;
-    }
-
-
     faust_node::FaustMenuBar::FaustMenuBar(faust_node *n) :
 	addButton("add", this, factory),
 	editButton("faust", this, factory),

@@ -42,7 +42,6 @@ struct faust_node: public scriptnode::WrapperNode
     virtual void process(ProcessDataDyn& data) override;
     virtual void processFrame(FrameType& data) override;
     static NodeBase* createNode(DspNetwork* n, ValueTree v);
-    virtual scriptnode::NodeComponent* createComponent() override;
     File getFaustRootFile(NodeBase* n);
 
     void parameterUpdated(ValueTree child, bool wasAdded);

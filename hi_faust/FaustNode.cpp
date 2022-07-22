@@ -353,22 +353,43 @@ namespace faust {
 	DBG("Num parameters in NodeBase: " << getNumParameters());
     }
 
+    static void updateFaustZone(void* obj, double value)
+    {
+	*static_cast<float*>(obj) = (float)value;
+    }
+
+    // ParameterTree listener callback: This function is called when the ParameterTree changes
     void faust_node::parameterUpdated(ValueTree child, bool wasAdded)
     {
 	if (wasAdded)
 	{
-	    auto p = new scriptnode::Parameter(this, child);
-	    auto dp = new scriptnode::parameter::dynamic();
+	    String parameterLabel = child.getProperty(PropertyIds::ID);
+	    auto faustParameter = faust->ui.getParameterByLabel(parameterLabel).value_or(nullptr);
 
-	    dp->referto(zonePointer, setFaustZone);
-	    dp->f = ;
-	    p->setDynamicParameter(dp);
+	    // proceed only if this parameter was defined in faust (check by label)
+	    if (!faustParameter)
+		return
+
+	    float* zonePointer = faustParameter->zone;
+
+	    // setup dynamic parameter
+	    auto dp = new scriptnode::parameter::dynamic();
+	    // install callback and zone pointer into dynamic parameter
+	    dp->referTo(zonePointer, updateFaustZone);
+
+	    // create dynamic_base from dynamic parameter to attach to the new Parameter
+	    auto dyn_base = new scriptnode::parameter::dynamic_base(*dp);
+
+	    // create and setup parameter
+	    auto p = new scriptnode::Parameter(this, child);
+	    p->setDynamicParameter(dyn_base);
 	    
 	    NodeBase::addParameter(p);
 	}
 	else
 	{
-	    NodeBase::removeParameter(child);
+	    auto index = child.getParent().indexOf(child);
+	    NodeBase::removeParameter(index);
 	}
     }
 

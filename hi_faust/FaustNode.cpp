@@ -6,7 +6,7 @@
 namespace scriptnode {
 namespace faust {
     struct faust_ui : public ::faust::UI {
-	enum CONTROL_TYPE {
+	enum ControlType {
 	    NONE = 0,
 	    BUTTON,
 	    CHECK_BUTTON,
@@ -19,7 +19,6 @@ namespace faust {
 	    MIDI,
 	    OTHER=0xffff,
 	};
-	using ControlType = enum CONTROL_TYPE;
 
 	struct Parameter {
 	    ControlType type;

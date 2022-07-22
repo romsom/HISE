@@ -32,6 +32,7 @@ struct faust_node: public scriptnode::WrapperNode
 	virtual void resized() override;
 
 	WeakReference<faust_node> node;
+	hise::ScriptnodeComboBoxLookAndFeel claf;
     };
 
     faust_node(DspNetwork* n, ValueTree v);

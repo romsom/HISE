@@ -76,11 +76,12 @@ namespace faust {
 	float* getZone(String label) {
 	    for (auto p : parameters)
 	    {
-		if (p->label = label)
+		if (p->label == label)
 		    return p->zone;
 	    }
 	    return nullptr;
 	}
+
 	
         // -- metadata declarations
 
@@ -326,7 +327,7 @@ namespace faust {
 		} 
 
 	    parameterListener.setCallback(getParameterTree(),
-					  valuetree:AsyncMode::Synchronously, BIND_MEMBER_FUNCTION_2(parameterUpdated));
+					  valuetree::AsyncMode::Synchronously, BIND_MEMBER_FUNCTION_2(parameterUpdated));
 					  
 	    
 	    setupParameters();

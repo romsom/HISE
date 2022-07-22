@@ -477,7 +477,7 @@ namespace faust {
 	editButton("faust", this, factory),
 	node(n)
     {
-
+	setLookAndFeel(&claf);
 	setSize(200, 24);
 	addAndMakeVisible(sourceSelector);
 	addAndMakeVisible(addButton);

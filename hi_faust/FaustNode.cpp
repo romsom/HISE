@@ -368,9 +368,9 @@ void faust_node::parameterUpdated(ValueTree child, bool wasAdded)
 
         // proceed only if this parameter was defined in faust (check by label)
         if (!faustParameter)
-            return
+            return;
 
-                float* zonePointer = faustParameter->zone;
+        float* zonePointer = faustParameter->zone;
 
         // setup dynamic parameter
         auto dp = new scriptnode::parameter::dynamic();

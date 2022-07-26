@@ -11,28 +11,28 @@ struct faust_node: public scriptnode::WrapperNode
     JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node);
 
     struct FaustMenuBar : public Component,
-			  public ButtonListener,
-			  public ComboBox::Listener
+                          public ButtonListener,
+                          public ComboBox::Listener
 
     {
 
-	FaustMenuBar(faust_node *n);
-	struct Factory : public PathFactory
-	{
-	    Path createPath(const String& p) const override;
-	    String getId() const override { return {}; }
-	} factory;
+        FaustMenuBar(faust_node *n);
+        struct Factory : public PathFactory
+        {
+            Path createPath(const String& p) const override;
+            String getId() const override { return {}; }
+        } factory;
 
-	ComboBox sourceSelector;
-	HiseShapeButton addButton;
-	HiseShapeButton editButton;
+        juce::ComboBox sourceSelector;
+        HiseShapeButton addButton;
+        HiseShapeButton editButton;
 
-	virtual void buttonClicked(Button* b) override;
-	virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
-	virtual void resized() override;
+        virtual void buttonClicked(Button* b) override;
+        virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
+        virtual void resized() override;
 
-	WeakReference<faust_node> node;
-	hise::ScriptnodeComboBoxLookAndFeel claf;
+        WeakReference<faust_node> node;
+        hise::ScriptnodeComboBoxLookAndFeel claf;
     };
 
     faust_node(DspNetwork* n, ValueTree v);
@@ -62,7 +62,7 @@ private:
     std::vector<float*> inputChannelPointers;
     void resizeBuffer();
     float** getRawInputChannelPointers() {
-	return &inputChannelPointers[0];
+        return &inputChannelPointers[0];
     }
     void bufferChannelsData(float** channels, int nChannels, int nFrames);
 };

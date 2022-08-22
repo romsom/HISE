@@ -25,7 +25,8 @@ struct faust_node: public scriptnode::WrapperNode
 
     void addNewParameter(parameter::data p);
 
-    virtual void* getObjectPtr() override { return nullptr; }
+    // provide correct pointer to createExtraComponent()
+    virtual void* getObjectPtr() override { return (void*)this; }
 
     String getSourceId();
     void loadSource(String& newSourceId);

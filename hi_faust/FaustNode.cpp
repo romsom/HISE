@@ -537,10 +537,12 @@ void faust_node::FaustMenuBar::buttonClicked(Button* b)
 void faust_node::FaustMenuBar::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
 {
     // TODO
+    DBG("Combobox changed, new text: " + comboBoxThatHasChanged->getText());
 }
 
 juce::Path faust_node::FaustMenuBar::Factory::createPath(const String& url) const
 {
+    DBG("createPath: " + url);
     if (url == "snex")
     {
         snex::ui::SnexPathFactory f;

@@ -285,7 +285,6 @@ struct FaustMenuBar : public Component,
     juce::ComboBox sourceSelector;
     HiseShapeButton addButton;
     HiseShapeButton editButton;
-    faust_node* faust;
 
     virtual void buttonClicked(Button* b) override;
     virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
@@ -316,11 +315,11 @@ struct FaustMenuBar : public Component,
     }
 
     void createNewFile() {
-        auto name = PresetHandler::getCustomName(faust->getSourceId(), "Enter the name for the Faust file");
+        auto name = PresetHandler::getCustomName(node->getSourceId(), "Enter the name for the Faust file");
 
         if (name.isNotEmpty())
         {
-            faust->loadSource(name);
+            node->loadSource(name);
             //rebuildComboBoxItems();
             //refreshButtonState();
         }

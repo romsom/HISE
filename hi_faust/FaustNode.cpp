@@ -266,11 +266,11 @@ faust_node::faust_node(DspNetwork* n, ValueTree v) :
     WrapperNode(n, v),
     faust(new faust_wrapper)
 {
-    // dummy code for now:
     extraComponentFunction = [](void* o, PooledUIUpdater* u)
     {
         return new FaustMenuBar(static_cast<faust_node*>(o));
     };
+    // dummy code for now:
     faust->code =
         "import(\"math.lib\");\n"
         "import(\"filter.lib\");\n"

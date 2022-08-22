@@ -336,6 +336,13 @@ faust_node::faust_node(DspNetwork* n, ValueTree v) :
 
     setupParameters();
     // we can't init yet, because we don't know the sample rate
+    File f = getFaustRootFile(this);
+    // Create directory if it's not already there
+    if (!f.isDirectory()) {
+        auto res = f.createDirectory();
+        //DBG(res);
+    }
+    DBG(f.getFullPathName());
 }
 
 void faust_node::setupParameters()
@@ -464,7 +471,7 @@ File faust_node::getFaustRootFile(NodeBase* n)
 {
     auto mc = n->getScriptProcessor()->getMainController_();
     auto dspRoot = mc->getCurrentFileHandler().getSubDirectory(FileHandlerBase::DspNetworks);
-    return dspRoot.getChildFile("CodeLibrary/faust");
+    return dspRoot.getChildFile("CodeLibrary/faust_node");
 }
 
 void faust_node::resizeBuffer()

@@ -293,6 +293,49 @@ struct FaustMenuBar : public Component,
 
     WeakReference<faust_node> node;
     hise::ScriptnodeComboBoxLookAndFeel claf;
+
+    // Define menu options for addButton
+    enum MenuOption {
+        MENU_OPTION_FIRST = 1,
+        NEW_FILE = MENU_OPTION_FIRST,
+        // add more options here
+        MENU_OPTION_LAST,
+        MENU_OPTION_INVALID,
+    };
+
+    const std::map<enum MenuOption, String> menuOptions = {
+        {NEW_FILE, "Create new file"},
+        // add description for more options here
+        {MENU_OPTION_INVALID, "Invalid Option (BUG)"}
+    };
+
+    String& getTextForMenuOptionId(MenuOption id)
+    {
+        if (menuOptions.count(id) > 0) return menuOptions[id];
+        return menuOptions[MENU_OPTION_INVALID];
+    }
+
+    void createNewFile() {
+        auto name = PresetHandler::getCustomName(faust->getSourceId(), "Enter the name for the Faust file");
+
+        if (name.isNotEmpty())
+        {
+            faust->loadSource(name);
+            //rebuildComboBoxItems();
+            //refreshButtonState();
+        }
+    }
+
+    void executeMenuAction(MenuOption o)
+    {
+        switch(o) {
+        NEW_FILE:
+            createNewFile();
+            break;
+        default:
+            std::cerr << "FaustMenuBar: Unknown MenuOption: " + o << std::endl;
+        }
+    }
 };
 
 // faust_node::faust_node(DspNetwork* n, ValueTree v) :
@@ -567,7 +610,16 @@ void FaustMenuBar::resized()
 
 void FaustMenuBar::buttonClicked(Button* b)
 {
-    // TODO
+    if (b == &addButton) {
+
+        juce::PopupMenu m;
+        for (MenuOption o=MENU_OPTION_FIRST; o<MENU_OPTION_LAST; o = (MenuOption)((int)o + 1)) {
+            m.addItem((int)o, getTextForMenuOptionId(o), true);
+        }
+
+        MenuOption menu_selection = (MenuOption)m.show();
+        executeMenuAction(menu_selection);
+    }
 }
 void FaustMenuBar::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
 {

@@ -303,13 +303,13 @@ struct FaustMenuBar : public Component,
         MENU_OPTION_INVALID,
     };
 
-    const std::map<enum MenuOption, String> menuOptions = {
+    const std::map<int, String> menuOptions = {
         {NEW_FILE, "Create new file"},
-        // add description for more options here
+            // add description for more options here
         {MENU_OPTION_INVALID, "Invalid Option (BUG)"}
     };
 
-    String& getTextForMenuOptionId(MenuOption id)
+    String& getTextForMenuOptionId(int id)
     {
         if (menuOptions.count(id) > 0) return menuOptions[id];
         return menuOptions[MENU_OPTION_INVALID];
@@ -326,14 +326,16 @@ struct FaustMenuBar : public Component,
         }
     }
 
-    void executeMenuAction(MenuOption o)
+    void executeMenuAction(int option)
     {
-        switch(o) {
+        switch(option) {
         NEW_FILE:
             createNewFile();
             break;
+
+            // add code for more functions here
         default:
-            std::cerr << "FaustMenuBar: Unknown MenuOption: " + o << std::endl;
+            std::cerr << "FaustMenuBar: Unknown MenuOption: " + option << std::endl;
         }
     }
 };

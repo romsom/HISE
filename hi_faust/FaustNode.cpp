@@ -336,7 +336,7 @@ faust_node::faust_node(DspNetwork* n, ValueTree v) :
 
     setupParameters();
     // we can't init yet, because we don't know the sample rate
-    File f = getFaustRootFile(this);
+    File f = getFaustRootFile();
     // Create directory if it's not already there
     if (!f.isDirectory()) {
         auto res = f.createDirectory();
@@ -467,9 +467,9 @@ NodeBase* faust_node::createNode(DspNetwork* n, ValueTree v)
     return new faust_node(n, v);
 }
 
-File faust_node::getFaustRootFile(NodeBase* n)
+File faust_node::getFaustRootFile()
 {
-    auto mc = n->getScriptProcessor()->getMainController_();
+    auto mc = this->getScriptProcessor()->getMainController_();
     auto dspRoot = mc->getCurrentFileHandler().getSubDirectory(FileHandlerBase::DspNetworks);
     return dspRoot.getChildFile("CodeLibrary/faust_node");
 }
@@ -478,9 +478,9 @@ File faust_node::getFaustRootFile(NodeBase* n)
  * Lookup a Faust source code file for this node.
  * The `basename` is the name without any extension.
  */
-File faust_node::getFaustFile(NodeBase* n, String basename)
+File faust_node::getFaustFile(String basename)
 {
-    auto nodeRoot = getFaustRootFile(n);
+    auto nodeRoot = getFaustRootFile();
     return nodeRoot.getChildFile(basename + ".dsp");
 }
 

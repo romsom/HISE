@@ -474,6 +474,16 @@ File faust_node::getFaustRootFile(NodeBase* n)
     return dspRoot.getChildFile("CodeLibrary/faust_node");
 }
 
+/*
+ * Lookup a Faust source code file for this node.
+ * The `basename` is the name without any extension.
+ */
+File faust_node::getFaustFile(NodeBase* n, String basename)
+{
+    auto nodeRoot = getFaustRootFile(n);
+    return nodeRoot.getChildFile(basename + ".dsp");
+}
+
 void faust_node::resizeBuffer()
 {
     inputBuffer.resize(_nChannels * _nFramesMax);

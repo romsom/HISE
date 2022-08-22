@@ -260,6 +260,32 @@ struct faust_wrapper {
     }
 };
 
+// Additional types for faust_node
+struct FaustMenuBar : public Component,
+                      public ButtonListener,
+                      public ComboBox::Listener
+
+{
+
+    FaustMenuBar(faust_node *n);
+    struct Factory : public PathFactory
+    {
+        Path createPath(const String& p) const override;
+        String getId() const override { return {}; }
+    } factory;
+
+    juce::ComboBox sourceSelector;
+    HiseShapeButton addButton;
+    HiseShapeButton editButton;
+
+    virtual void buttonClicked(Button* b) override;
+    virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
+    virtual void resized() override;
+
+    WeakReference<faust_node> node;
+    hise::ScriptnodeComboBoxLookAndFeel claf;
+};
+
 // faust_node::faust_node(DspNetwork* n, ValueTree v) :
 //      NodeBase(n, v, 0) { }
 faust_node::faust_node(DspNetwork* n, ValueTree v) :
@@ -505,7 +531,7 @@ void faust_node::bufferChannelsData(float** channels, int nChannels, int nFrames
     }
 }
 
-faust_node::FaustMenuBar::FaustMenuBar(faust_node *n) :
+FaustMenuBar::FaustMenuBar(faust_node *n) :
     addButton("add", this, factory),
     editButton("faust", this, factory),
     node(n)
@@ -517,7 +543,7 @@ faust_node::FaustMenuBar::FaustMenuBar(faust_node *n) :
     addAndMakeVisible(editButton);
 }
 
-void faust_node::FaustMenuBar::resized()
+void FaustMenuBar::resized()
 {
     auto b = getLocalBounds().reduced(0, 1);
     auto h = getHeight();
@@ -530,17 +556,17 @@ void faust_node::FaustMenuBar::resized()
     b.removeFromLeft(10);
 }
 
-void faust_node::FaustMenuBar::buttonClicked(Button* b)
+void FaustMenuBar::buttonClicked(Button* b)
 {
     // TODO
 }
-void faust_node::FaustMenuBar::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
+void FaustMenuBar::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
 {
     // TODO
     DBG("Combobox changed, new text: " + comboBoxThatHasChanged->getText());
 }
 
-juce::Path faust_node::FaustMenuBar::Factory::createPath(const String& url) const
+juce::Path FaustMenuBar::Factory::createPath(const String& url) const
 {
     DBG("createPath: " + url);
     if (url == "snex")

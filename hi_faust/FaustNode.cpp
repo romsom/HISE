@@ -275,20 +275,45 @@ struct FaustMenuBar : public Component,
 
 {
 
-    FaustMenuBar(faust_node *n);
+    FaustMenuBar(faust_node *n) :
+        addButton("add", this, factory),
+        editButton("faust", this, factory),
+        node(n)
+    {
+        setLookAndFeel(&claf);
+        setSize(200, 24);
+        addAndMakeVisible(sourceSelector);
+        addAndMakeVisible(addButton);
+        addAndMakeVisible(editButton);
+    }
+
     struct Factory : public PathFactory
     {
-        Path createPath(const String& p) const override;
         String getId() const override { return {}; }
+        juce::Path createPath(const String& url) const override
+        {
+            DBG("createPath: " + url);
+            if (url == "snex")
+            {
+                snex::ui::SnexPathFactory f;
+                return f.createPath(url);
+            }
+
+            Path p;
+
+            LOAD_PATH_IF_URL("new", ColumnIcons::threeDots);
+            LOAD_PATH_IF_URL("edit", ColumnIcons::openWorkspaceIcon);
+            LOAD_PATH_IF_URL("compile", EditorIcons::compileIcon);
+            LOAD_PATH_IF_URL("reset", EditorIcons::swapIcon);
+            LOAD_PATH_IF_URL("add", ColumnIcons::threeDots);
+
+            return p;
+        }
     } factory;
 
     juce::ComboBox sourceSelector;
     HiseShapeButton addButton;
     HiseShapeButton editButton;
-
-    virtual void buttonClicked(Button* b) override;
-    virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
-    virtual void resized() override;
 
     WeakReference<faust_node> node;
     hise::ScriptnodeComboBoxLookAndFeel claf;
@@ -337,6 +362,40 @@ struct FaustMenuBar : public Component,
             std::cerr << "FaustMenuBar: Unknown MenuOption: " + option << std::endl;
         }
     }
+
+
+    virtual void resized() override
+    {
+        auto b = getLocalBounds().reduced(0, 1);
+        auto h = getHeight();
+
+        addButton.setBounds(b.removeFromLeft(h-4));
+        sourceSelector.setBounds(b.removeFromLeft(100));
+        b.removeFromLeft(3);
+        editButton.setBounds(getLocalBounds().removeFromRight(80).reduced(2));
+
+        b.removeFromLeft(10);
+    }
+
+    virtual void buttonClicked(Button* b) override
+    {
+        if (b == &addButton) {
+
+            juce::PopupMenu m;
+            for (int o=MENU_OPTION_FIRST; o<MENU_OPTION_LAST; o++) {
+                m.addItem(o, getTextForMenuOptionId(o), true);
+            }
+
+            int menu_selection = (MenuOption)m.show();
+            executeMenuAction(menu_selection);
+        }
+    }
+    virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override
+    {
+        // TODO
+        DBG("Combobox changed, new text: " + comboBoxThatHasChanged->getText());
+    }
+
 };
 
 // faust_node::faust_node(DspNetwork* n, ValueTree v) :
@@ -584,69 +643,6 @@ void faust_node::bufferChannelsData(float** channels, int nChannels, int nFrames
     }
 }
 
-FaustMenuBar::FaustMenuBar(faust_node *n) :
-    addButton("add", this, factory),
-    editButton("faust", this, factory),
-    node(n)
-{
-    setLookAndFeel(&claf);
-    setSize(200, 24);
-    addAndMakeVisible(sourceSelector);
-    addAndMakeVisible(addButton);
-    addAndMakeVisible(editButton);
-}
-
-void FaustMenuBar::resized()
-{
-    auto b = getLocalBounds().reduced(0, 1);
-    auto h = getHeight();
-
-    addButton.setBounds(b.removeFromLeft(h-4));
-    sourceSelector.setBounds(b.removeFromLeft(100));
-    b.removeFromLeft(3);
-    editButton.setBounds(getLocalBounds().removeFromRight(80).reduced(2));
-
-    b.removeFromLeft(10);
-}
-
-void FaustMenuBar::buttonClicked(Button* b)
-{
-    if (b == &addButton) {
-
-        juce::PopupMenu m;
-        for (MenuOption o=MENU_OPTION_FIRST; o<MENU_OPTION_LAST; o = (MenuOption)((int)o + 1)) {
-            m.addItem((int)o, getTextForMenuOptionId(o), true);
-        }
-
-        MenuOption menu_selection = (MenuOption)m.show();
-        executeMenuAction(menu_selection);
-    }
-}
-void FaustMenuBar::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
-{
-    // TODO
-    DBG("Combobox changed, new text: " + comboBoxThatHasChanged->getText());
-}
-
-juce::Path FaustMenuBar::Factory::createPath(const String& url) const
-{
-    DBG("createPath: " + url);
-    if (url == "snex")
-    {
-        snex::ui::SnexPathFactory f;
-        return f.createPath(url);
-    }
-
-    Path p;
-
-    LOAD_PATH_IF_URL("new", ColumnIcons::threeDots);
-    LOAD_PATH_IF_URL("edit", ColumnIcons::openWorkspaceIcon);
-    LOAD_PATH_IF_URL("compile", EditorIcons::compileIcon);
-    LOAD_PATH_IF_URL("reset", EditorIcons::swapIcon);
-    LOAD_PATH_IF_URL("add", ColumnIcons::threeDots);
-
-    return p;
-}
 
 void faust_node::addNewParameter(parameter::data p)
 {

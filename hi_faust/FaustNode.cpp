@@ -260,7 +260,7 @@ struct faust_wrapper {
             jitDsp->init(sampleRate);
     }
 
-    String& getSourceId() {
+    String getSourceId() {
         return sourceId;
     }
 
@@ -657,7 +657,7 @@ void faust_node::addNewParameter(parameter::data p)
     getParameterTree().addChild(newTree, -1, getUndoManager());
 }
 
-String& faust_node::getSourceId()
+String faust_node::getSourceId()
 {
     return faust->getSourceId();
 }

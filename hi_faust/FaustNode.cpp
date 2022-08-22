@@ -328,7 +328,7 @@ struct FaustMenuBar : public Component,
     void executeMenuAction(int option)
     {
         switch(option) {
-        NEW_FILE:
+        case NEW_FILE:
             createNewFile();
             break;
 

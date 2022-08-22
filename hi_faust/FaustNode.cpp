@@ -192,10 +192,11 @@ struct faust_ui : public ::faust::UI {
 // wrapper struct for faust types to avoid name-clash
 struct faust_wrapper {
 
-    faust_wrapper():
+    faust_wrapper(String sourceId):
         sampleRate(0),
         jitFactory(nullptr),
-        jitDsp(nullptr)
+        jitDsp(nullptr),
+        sourceId(sourceId)
     { }
 
     ~faust_wrapper()
@@ -258,6 +259,13 @@ struct faust_wrapper {
         if (jitDsp)
             jitDsp->init(sampleRate);
     }
+
+    String& getSourceId() {
+        return sourceId;
+    }
+
+private:
+    String sourceId;
 };
 
 // Additional types for faust_node
@@ -277,6 +285,7 @@ struct FaustMenuBar : public Component,
     juce::ComboBox sourceSelector;
     HiseShapeButton addButton;
     HiseShapeButton editButton;
+    faust_node* faust;
 
     virtual void buttonClicked(Button* b) override;
     virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
@@ -290,7 +299,7 @@ struct FaustMenuBar : public Component,
 //      NodeBase(n, v, 0) { }
 faust_node::faust_node(DspNetwork* n, ValueTree v) :
     WrapperNode(n, v),
-    faust(new faust_wrapper)
+    faust(new faust_wrapper("faust_node"))
 {
     extraComponentFunction = [](void* o, PooledUIUpdater* u)
     {
@@ -593,6 +602,30 @@ void faust_node::addNewParameter(parameter::data p)
 
     auto newTree = p.createValueTree();
     getParameterTree().addChild(newTree, -1, getUndoManager());
+}
+
+String& faust_node::getSourceId()
+{
+    return faust->getSourceId();
+}
+
+void faust_node::loadSource(String& newSourceId)
+{
+    if (faust->getSourceId() == newSourceId) return;
+    File sourceFile = getFaustFile(newSourceId);
+
+    // Create new file if necessary
+    if (!sourceFile.existsAsFile()) {
+        auto res = sourceFile.create();
+        if (res.failed()) {
+            std::cerr << "Failed creating file \"" + sourceFile.getFullPathName() + "\"" << std::endl;
+        }
+    }
+
+    // Load file and recompile
+    String code = sourceFile.loadFileAsString();
+    faust->code = code.toStdString();
+    faust->setup();
 }
 
 }

@@ -10,30 +10,6 @@ struct faust_node: public scriptnode::WrapperNode
     SET_HISE_NODE_ID("faust");
     JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node);
 
-    struct FaustMenuBar : public Component,
-                          public ButtonListener,
-                          public ComboBox::Listener
-
-    {
-
-        FaustMenuBar(faust_node *n);
-        struct Factory : public PathFactory
-        {
-            Path createPath(const String& p) const override;
-            String getId() const override { return {}; }
-        } factory;
-
-        juce::ComboBox sourceSelector;
-        HiseShapeButton addButton;
-        HiseShapeButton editButton;
-
-        virtual void buttonClicked(Button* b) override;
-        virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
-        virtual void resized() override;
-
-        WeakReference<faust_node> node;
-        hise::ScriptnodeComboBoxLookAndFeel claf;
-    };
 
     faust_node(DspNetwork* n, ValueTree v);
     void initialise(NodeBase* n);

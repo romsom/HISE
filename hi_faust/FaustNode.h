@@ -27,7 +27,7 @@ struct faust_node: public scriptnode::WrapperNode
 
     virtual void* getObjectPtr() override { return nullptr; }
 
-    String& getSourceId();
+    String getSourceId();
     void loadSource(String& newSourceId);
 
     valuetree::ChildListener parameterListener;

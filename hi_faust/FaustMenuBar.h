@@ -15,6 +15,8 @@ struct FaustMenuBar : public Component,
         editButton("faust", this, factory),
         node(n)
     {
+        // we must provide a valid faust_node pointer
+        jassert(n);
         setLookAndFeel(&claf);
         setSize(200, 24);
         addAndMakeVisible(sourceSelector);

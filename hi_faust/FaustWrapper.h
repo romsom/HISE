@@ -33,9 +33,11 @@ struct faust_wrapper {
         // cleanup old code and factories
         if (jitDsp != nullptr) {
             delete jitDsp;
+            jitDsp = nullptr;
         }
         if (jitFactory != nullptr) {
             ::faust::deleteDSPFactory(jitFactory);
+            // no need to set jitFactory=nullptr, as it will be overwritten in the next step
         }
 
         int llvm_argc = 0;

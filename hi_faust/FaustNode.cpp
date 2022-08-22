@@ -664,7 +664,7 @@ String faust_node::getSourceId()
 
 void faust_node::loadSource(String& newSourceId)
 {
-    if (faust->getSourceId() == newSourceId) return;
+    if (getSourceId() == newSourceId) return;
     File sourceFile = getFaustFile(newSourceId);
 
     // Create new file if necessary

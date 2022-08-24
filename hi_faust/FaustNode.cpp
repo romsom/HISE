@@ -305,7 +305,16 @@ void faust_node::updateClassId(Identifier, var newValue)
     auto newId = newValue.toString();
 
     DBG(newId);
-    // TODO: workbench
+    if (newId.isNotEmpty())
+    {
+        auto nb = getRootNetwork()->codeManager.getOrCreate(getTypeId(), Identifier(newValue.toString()));
+        // TODO: workbench
+    }
+}
+
+StringArray faust_node::getAvailableClassIds()
+{
+    return getRootNetwork()->codeManager.getClassList(getTypeId());
 }
 
 

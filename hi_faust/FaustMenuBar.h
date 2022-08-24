@@ -82,7 +82,7 @@ struct FaustMenuBar : public Component,
         if (name.isNotEmpty())
         {
             node->setClass(name);
-            //rebuildComboBoxItems();
+            rebuildComboBoxItems();
             //refreshButtonState();
         }
     }
@@ -98,6 +98,16 @@ struct FaustMenuBar : public Component,
         default:
             std::cerr << "FaustMenuBar: Unknown MenuOption: " + option << std::endl;
         }
+    }
+
+
+    void rebuildComboBoxItems()
+    {
+        classSelector.clear(dontSendNotification);
+        classSelector.addItemList(node->getAvailableClassIds(), 1);
+
+        // if (auto w = source->getWorkbench())
+        //     classSelector.setText(w->getInstanceId().toString(), dontSendNotification);
     }
 
 

@@ -81,7 +81,7 @@ struct FaustMenuBar : public Component,
 
         if (name.isNotEmpty())
         {
-            node->loadSource(name);
+            node->setSource(name);
             //rebuildComboBoxItems();
             //refreshButtonState();
         }

@@ -137,7 +137,7 @@ DECLARE_ID(UseUnnormalisedModulation);
 DECLARE_ID(AllowPolyphonic);
 DECLARE_ID(AllowCompilation);
 DECLARE_ID(CompileChannelAmount);
-
+DECLARE_ID(SourceId);
 
 struct Helpers
 {

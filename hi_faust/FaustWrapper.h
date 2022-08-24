@@ -6,11 +6,11 @@ namespace faust {
 // wrapper struct for faust types to avoid name-clash
 struct faust_wrapper {
 
-    faust_wrapper(String sourceId):
+    faust_wrapper(String classId):
         sampleRate(0),
         jitFactory(nullptr),
         jitDsp(nullptr),
-        sourceId(sourceId)
+        classId(classId)
     { }
 
     ~faust_wrapper()
@@ -76,12 +76,12 @@ struct faust_wrapper {
             jitDsp->init(sampleRate);
     }
 
-    String getSourceId() {
-        return sourceId;
+    String getClassId() {
+        return classId;
     }
 
 private:
-    String sourceId;
+    String classId;
 };
 
 } // namespace faust

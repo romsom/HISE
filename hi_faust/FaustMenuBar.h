@@ -19,7 +19,7 @@ struct FaustMenuBar : public Component,
         jassert(n);
         setLookAndFeel(&claf);
         setSize(200, 24);
-        addAndMakeVisible(sourceSelector);
+        addAndMakeVisible(classSelector);
         addAndMakeVisible(addButton);
         addAndMakeVisible(editButton);
     }
@@ -48,7 +48,7 @@ struct FaustMenuBar : public Component,
         }
     } factory;
 
-    juce::ComboBox sourceSelector;
+    juce::ComboBox classSelector;
     HiseShapeButton addButton;
     HiseShapeButton editButton;
 
@@ -77,11 +77,11 @@ struct FaustMenuBar : public Component,
     }
 
     void createNewFile() {
-        auto name = PresetHandler::getCustomName(node->getSourceId(), "Enter the name for the Faust file");
+        auto name = PresetHandler::getCustomName(node->getClassId(), "Enter the name for the Faust file");
 
         if (name.isNotEmpty())
         {
-            node->setSource(name);
+            node->setClass(name);
             //rebuildComboBoxItems();
             //refreshButtonState();
         }
@@ -107,7 +107,7 @@ struct FaustMenuBar : public Component,
         auto h = getHeight();
 
         addButton.setBounds(b.removeFromLeft(h-4));
-        sourceSelector.setBounds(b.removeFromLeft(100));
+        classSelector.setBounds(b.removeFromLeft(100));
         b.removeFromLeft(3);
         editButton.setBounds(getLocalBounds().removeFromRight(80).reduced(2));
 

@@ -21,6 +21,8 @@ struct FaustMenuBar : public Component,
         setSize(200, 24);
 
         addAndMakeVisible(classSelector);
+        classSelector.setColour(ComboBox::ColourIds::textColourId, Colour(0xFFAAAAAA));
+        classSelector.setLookAndFeel(&claf);
         classSelector.addListener(this);
 
         addAndMakeVisible(addButton);
@@ -134,6 +136,7 @@ struct FaustMenuBar : public Component,
         if (b == &addButton) {
 
             juce::PopupMenu m;
+            m.setLookAndFeel(&claf);
             for (int o=MENU_OPTION_FIRST; o<MENU_OPTION_LAST; o++) {
                 m.addItem(o, getTextForMenuOptionId(o), true);
             }

@@ -139,8 +139,9 @@ struct FaustMenuBar : public Component,
     }
     virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override
     {
-        // TODO
-        DBG("Combobox changed, new text: " + comboBoxThatHasChanged->getText());
+        auto name = comboBoxThatHasChanged->getText();
+        DBG("Combobox changed, new text: " + name);
+        node->setClass(name);
     }
 
 };

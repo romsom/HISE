@@ -139,7 +139,8 @@ struct FaustMenuBar : public Component,
             }
 
             int menu_selection = (MenuOption)m.show();
-            executeMenuAction(menu_selection);
+            if (menu_selection > 0)
+                executeMenuAction(menu_selection);
         }
     }
     virtual void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override

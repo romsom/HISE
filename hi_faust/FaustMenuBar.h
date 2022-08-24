@@ -22,6 +22,8 @@ struct FaustMenuBar : public Component,
         addAndMakeVisible(classSelector);
         addAndMakeVisible(addButton);
         addAndMakeVisible(editButton);
+        // gather existing source files
+        rebuildComboBoxItems();
     }
 
     struct Factory : public PathFactory

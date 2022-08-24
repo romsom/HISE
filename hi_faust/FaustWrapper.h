@@ -29,6 +29,12 @@ struct faust_wrapper {
     ::faust::dsp *jitDsp;
     faust_ui ui;
 
+    // audio buffer
+    int _nChannels;
+    int _nFramesMax;
+    std::vector<float> inputBuffer;
+    std::vector<float*> inputChannelPointers;
+
     bool setup() {
         // cleanup old code and factories
         if (jitDsp != nullptr) {
@@ -71,13 +77,86 @@ struct faust_wrapper {
         return true;
     }
 
+    void prepare(PrepareSpecs specs)
+    {
+        // recompile if sample rate changed
+        int newSampleRate = (int)specs.sampleRate;
+        if (newSampleRate != sampleRate) {
+            sampleRate = newSampleRate;
+            // init samplerate
+            init();
+        }
+
+        if (_nChannels != specs.numChannels || _nFramesMax != specs.blockSize) {
+            std::cout << "Faust: Resizing buffers" << std::endl;
+            _nChannels = specs.numChannels;
+            _nFramesMax = specs.blockSize;
+            resizeBuffer();
+        }
+    }
+
     void init() {
         if (jitDsp)
             jitDsp->init(sampleRate);
     }
 
+    void reset()
+    {
+        if (jitDsp) {
+            jitDsp->instanceClear();
+        }
+    }
+
     String getClassId() {
         return classId;
+    }
+
+    void process(ProcessDataDyn& data)
+    {
+        if (jitDsp) {
+            // TODO: stable and sane sample format matching
+            int n_faust_inputs = jitDsp->getNumInputs();
+            int n_faust_outputs = jitDsp->getNumOutputs();
+            int n_hise_channels = data.getNumChannels();
+
+            if (n_faust_inputs == n_hise_channels && n_faust_outputs == n_hise_channels) {
+                int nFrames = data.getNumSamples();
+                float** channel_data = data.getRawDataPointers();
+                // copy input data, because even with -inpl not all faust generated code can handle
+                // in-place processing
+                bufferChannelsData(channel_data, n_hise_channels, nFrames);
+                jitDsp->compute(nFrames, getRawInputChannelPointers(), channel_data);
+            } else {
+                // TODO error indication
+            }
+        } else {
+            // std::cout << "Faust: dsp was not initialized" << std::endl;
+        }
+    }
+
+    float** getRawInputChannelPointers() {
+        return &inputChannelPointers[0];
+    }
+
+    void resizeBuffer()
+    {
+        inputBuffer.resize(_nChannels * _nFramesMax);
+        // setup new pointers
+        inputChannelPointers.resize(_nChannels);
+        inputChannelPointers.clear();
+        for (int i=0; i<inputBuffer.size(); i+=_nFramesMax) {
+            inputChannelPointers.push_back(&inputBuffer[i]);
+        }
+    }
+
+    void bufferChannelsData(float** channels, int nChannels, int nFrames)
+    {
+        assert(nChannels == _nChannels);
+        assert(nFrames <= _nFramesMax);
+
+        for (int i=0; i<nChannels; i++) {
+            memcpy(inputChannelPointers[i], channels[i], nFrames * sizeof(float));
+        }
     }
 
 private:

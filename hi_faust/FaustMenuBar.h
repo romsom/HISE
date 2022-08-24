@@ -19,7 +19,10 @@ struct FaustMenuBar : public Component,
         jassert(n);
         setLookAndFeel(&claf);
         setSize(200, 24);
+
         addAndMakeVisible(classSelector);
+        classSelector.addListener(this);
+
         addAndMakeVisible(addButton);
         addAndMakeVisible(editButton);
         // gather existing source files

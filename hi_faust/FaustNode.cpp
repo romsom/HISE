@@ -104,52 +104,18 @@ void faust_node::initialise(NodeBase* n)
 void faust_node::prepare(PrepareSpecs specs)
 {
     lastSpecs = specs;
-    // recompile if sample rate changed
-    int newSampleRate = (int)specs.sampleRate;
-    if (newSampleRate != faust->sampleRate) {
-        faust->sampleRate = newSampleRate;
-        // init samplerate
-        faust->init();
-    }
-
-    if (_nChannels != specs.numChannels || _nFramesMax != specs.blockSize) {
-        std::cout << "Faust: Resizing buffers" << std::endl;
-        _nChannels = specs.numChannels;
-        _nFramesMax = specs.blockSize;
-        resizeBuffer();
-    }
+    faust->prepare(specs);
 }
 
 void faust_node::reset()
 {
-    if (faust->jitDsp) {
-        faust->jitDsp->instanceClear();
-    }
+    faust->reset();
 }
 
 void faust_node::process(ProcessDataDyn& data)
 {
     if (isBypassed()) return;
-
-    if (faust->jitDsp) {
-        // TODO: stable and sane sample format matching
-        int n_faust_inputs = faust->jitDsp->getNumInputs();
-        int n_faust_outputs = faust->jitDsp->getNumOutputs();
-        int n_hise_channels = data.getNumChannels();
-
-        if (n_faust_inputs == n_hise_channels && n_faust_outputs == n_hise_channels) {
-            int nFrames = data.getNumSamples();
-            float** channel_data = data.getRawDataPointers();
-            // copy input data, because even with -inpl not all faust generated code can handle
-            // in-place processing
-            bufferChannelsData(channel_data, n_hise_channels, nFrames);
-            faust->jitDsp->compute(nFrames, getRawInputChannelPointers(), channel_data);
-        } else {
-            // TODO error indication
-        }
-    } else {
-        // std::cout << "Faust: dsp was not initialized" << std::endl;
-    }
+    faust->process(data);
 }
 
 void faust_node::processFrame(FrameType& data)
@@ -177,26 +143,6 @@ File faust_node::getFaustFile(String basename)
     return nodeRoot.getChildFile(basename + ".dsp");
 }
 
-void faust_node::resizeBuffer()
-{
-    inputBuffer.resize(_nChannels * _nFramesMax);
-    // setup new pointers
-    inputChannelPointers.resize(_nChannels);
-    inputChannelPointers.clear();
-    for (int i=0; i<inputBuffer.size(); i+=_nFramesMax) {
-        inputChannelPointers.push_back(&inputBuffer[i]);
-    }
-}
-
-void faust_node::bufferChannelsData(float** channels, int nChannels, int nFrames)
-{
-    assert(nChannels == _nChannels);
-    assert(nFrames <= _nFramesMax);
-
-    for (int i=0; i<nChannels; i++) {
-        memcpy(inputChannelPointers[i], channels[i], nFrames * sizeof(float));
-    }
-}
 
 
 void faust_node::addNewParameter(parameter::data p)

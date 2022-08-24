@@ -15,7 +15,7 @@ namespace faust {
 faust_node::faust_node(DspNetwork* n, ValueTree v) :
     WrapperNode(n, v),
     faust(new faust_wrapper("faust_node")),
-    sourceId(PropertyIds::SourceId, "faust_node")
+    classId(PropertyIds::ClassId, "faust_node")
 {
     extraComponentFunction = [](void* o, PooledUIUpdater* u)
     {
@@ -157,8 +157,8 @@ void faust_node::parameterUpdated(ValueTree child, bool wasAdded)
 
 void faust_node::initialise(NodeBase* n)
 {
-    sourceId.initialise(n);
-    sourceId.setAdditionalCallback(BIND_MEMBER_FUNCTION_2(faust_node::updateSourceId), true);
+    classId.initialise(n);
+    classId.setAdditionalCallback(BIND_MEMBER_FUNCTION_2(faust_node::updateClassId), true);
 }
 
 void faust_node::prepare(PrepareSpecs specs)
@@ -268,16 +268,16 @@ void faust_node::addNewParameter(parameter::data p)
     getParameterTree().addChild(newTree, -1, getUndoManager());
 }
 
-String faust_node::getSourceId()
+String faust_node::getClassId()
 {
-    return sourceId.getValue();
+    return classId.getValue();
 }
 
 void faust_node::loadSource()
 {
-    auto newSourceId = getSourceId();
-    if (faust->getSourceId() == newSourceId) return;
-    File sourceFile = getFaustFile(newSourceId);
+    auto newClassId = getClassId();
+    if (faust->getClassId() == newClassId) return;
+    File sourceFile = getFaustFile(newClassId);
 
     // Create new file if necessary
     if (!sourceFile.existsAsFile()) {
@@ -293,14 +293,14 @@ void faust_node::loadSource()
     faust->setup();
 }
 
-void faust_node::setSource(const String& newSourceId)
+void faust_node::setClass(const String& newClassId)
 {
-    sourceId.storeValue(newSourceId, getUndoManager());
-    updateSourceId({}, newSourceId);
+    classId.storeValue(newClassId, getUndoManager());
+    updateClassId({}, newClassId);
     loadSource();
 }
 
-void faust_node::updateSourceId(Identifier, var newValue)
+void faust_node::updateClassId(Identifier, var newValue)
 {
     auto newId = newValue.toString();
 

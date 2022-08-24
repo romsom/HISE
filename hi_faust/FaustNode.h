@@ -28,9 +28,9 @@ struct faust_node: public scriptnode::WrapperNode
     // provide correct pointer to createExtraComponent()
     virtual void* getObjectPtr() override { return (void*)this; }
 
-    String getSourceId();
+    String getClassId();
     void loadSource();
-    void setSource(const String& newSourceId);
+    void setClass(const String& newClassId);
 
     valuetree::ChildListener parameterListener;
 
@@ -47,8 +47,8 @@ private:
         return &inputChannelPointers[0];
     }
     void bufferChannelsData(float** channels, int nChannels, int nFrames);
-    NodePropertyT<String> sourceId;
-    void updateSourceId(Identifier, var newValue);
+    NodePropertyT<String> classId;
+    void updateClassId(Identifier, var newValue);
 };
 }
 }

@@ -161,6 +161,14 @@ void faust_node::addNewParameter(parameter::data p)
     getParameterTree().addChild(newTree, -1, getUndoManager());
 }
 
+// Remove all HISE Parameters. Parameters will still be present in faust->ui
+// and will be cleared in faust->setup() automatically
+void faust_node::resetParameters()
+{
+    DBG("Resetting parameters");
+    getParameterTree().removeAllChildren(getUndoManager());
+}
+
 String faust_node::getClassId()
 {
     return classId.getValue();
@@ -200,6 +208,7 @@ void faust_node::setClass(const String& newClassId)
 {
     classId.storeValue(newClassId, getUndoManager());
     updateClassId({}, newClassId);
+    resetParameters();
     loadSource();
 }
 

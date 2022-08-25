@@ -38,7 +38,8 @@ struct faust_node: public scriptnode::WrapperNode
 
 private:
     void setupParameters();
-    void recompileFaustCode();
+    void resetParameters();
+    // void recompileFaustCode();
     std::unique_ptr<faust_wrapper> faust;
     NodePropertyT<String> classId;
     void updateClassId(Identifier, var newValue);

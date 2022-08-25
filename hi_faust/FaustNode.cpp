@@ -87,11 +87,18 @@ void faust_node::parameterUpdated(ValueTree child, bool wasAdded)
         p->setDynamicParameter(dyn_base);
 
         NodeBase::addParameter(p);
+        {
+            auto index = child.getParent().indexOf(child);
+            DBG("parameter added, index=");
+            DBG(index);
+        }
     }
     else
     {
-        auto index = child.getParent().indexOf(child);
-        NodeBase::removeParameter(index);
+        String parameterLabel = child.getProperty(PropertyIds::ID);
+        DBG("removing parameter: ");
+        DBG(parameterLabel);
+        NodeBase::removeParameter(parameterLabel);
     }
 }
 

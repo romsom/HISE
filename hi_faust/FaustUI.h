@@ -48,6 +48,11 @@ struct faust_ui : public ::faust::UI {
 
     std::vector<std::shared_ptr<Parameter>> parameters;
 
+    void reset()
+    {
+        parameters.clear();
+    }
+
     std::optional<std::shared_ptr<Parameter>> getParameterByLabel(String label)
     {
         for (auto p : parameters)

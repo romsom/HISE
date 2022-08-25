@@ -36,7 +36,7 @@ struct FaustMenuBar : public Component,
         String getId() const override { return {}; }
         juce::Path createPath(const String& url) const override
         {
-            DBG("createPath: " + url);
+            // TODO: Faust Logo
             if (url == "snex")
             {
                 snex::ui::SnexPathFactory f;

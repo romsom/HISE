@@ -11,11 +11,12 @@ namespace faust {
 // wrapper struct for faust types to avoid name-clash
 struct faust_wrapper {
 
-    faust_wrapper(String classId):
+    faust_wrapper(String classId, String projectDir):
         sampleRate(0),
         jitFactory(nullptr),
         jitDsp(nullptr),
-        classId(classId)
+        classId(classId),
+        projectDir(projectDir)
     { }
 
     ~faust_wrapper()
@@ -33,6 +34,7 @@ struct faust_wrapper {
     ::faust::llvm_dsp_factory* jitFactory;
     ::faust::dsp *jitDsp;
     faust_ui ui;
+    String projectDir;
 
     // Mutex for synchronization of compilation and processing
     juce::CriticalSection jitLock;
@@ -65,8 +67,8 @@ struct faust_wrapper {
 
         ui.reset();
 
-        int llvm_argc = 0;
-        const char* llvm_argv[] = {nullptr};
+        int llvm_argc = 2;
+        const char* llvm_argv[] = {"-I", projectDir.toRawUTF8(), nullptr};
 
         jitFactory = ::faust::createDSPFactoryFromString("faust", code, llvm_argc, llvm_argv, "",
                                                          errorMessage, jitOptimize);

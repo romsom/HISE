@@ -76,6 +76,7 @@ struct faust_wrapper {
             DBG(p);
         }
 
+        init();
         return true;
     }
 

@@ -496,6 +496,7 @@ public:
 
 	void addParameter(Parameter* p);
 	void removeParameter(int index);
+	void removeParameter(const String& id);
 
 	void setParentNode(Ptr newParentNode);
 

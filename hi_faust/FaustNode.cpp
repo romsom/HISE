@@ -14,7 +14,7 @@ namespace faust {
 //      NodeBase(n, v, 0) { }
 faust_node::faust_node(DspNetwork* n, ValueTree v) :
     WrapperNode(n, v),
-    faust(new faust_wrapper("faust_node")),
+    faust(new faust_wrapper("faust_node", getFaustRootFile().getFullPathName())),
     classId(PropertyIds::ClassId, "faust_node")
 {
     extraComponentFunction = [](void* o, PooledUIUpdater* u)

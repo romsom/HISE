@@ -1,3 +1,8 @@
+#include <atomic>
+#include <chrono>
+#include <thread>
+using namespace std::chrono_literals;
+
 #ifndef __FAUST_WRAPPER_H
 
 namespace scriptnode {
@@ -10,7 +15,8 @@ struct faust_wrapper {
         sampleRate(0),
         jitFactory(nullptr),
         jitDsp(nullptr),
-        classId(classId)
+        classId(classId),
+        ready(false)
     { }
 
     ~faust_wrapper()
@@ -28,6 +34,7 @@ struct faust_wrapper {
     ::faust::llvm_dsp_factory* jitFactory;
     ::faust::dsp *jitDsp;
     faust_ui ui;
+    std::atomic<bool> ready;
 
     // audio buffer
     int _nChannels;
@@ -36,6 +43,12 @@ struct faust_wrapper {
     std::vector<float*> inputChannelPointers;
 
     bool setup() {
+        ready.store(false);
+        // because the audio thread is real-time, we can wait for the duration of one
+        // frame and be sure we don't modify any data the audio thread still uses
+        // TODO: calculate actual duration
+        std::this_thread::sleep_for(20ms);
+
         // cleanup old code and factories
         if (jitDsp != nullptr) {
             delete jitDsp;
@@ -77,6 +90,8 @@ struct faust_wrapper {
         }
 
         init();
+        // If we reached this point the initialization was successful
+        ready.store(true);
         return true;
     }
 
@@ -116,7 +131,7 @@ struct faust_wrapper {
 
     void process(ProcessDataDyn& data)
     {
-        if (jitDsp) {
+        if (ready.load()) {
             // TODO: stable and sane sample format matching
             int n_faust_inputs = jitDsp->getNumInputs();
             int n_faust_outputs = jitDsp->getNumOutputs();

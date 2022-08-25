@@ -67,8 +67,8 @@ struct faust_wrapper {
 
         ui.reset();
 
-        int llvm_argc = 2;
-        const char* llvm_argv[] = {"-I", projectDir.toRawUTF8(), nullptr};
+        int llvm_argc = 3;
+        const char* llvm_argv[] = {"-rui", "-I", projectDir.toRawUTF8(), nullptr};
 
         jitFactory = ::faust::createDSPFactoryFromString("faust", code, llvm_argc, llvm_argv, "",
                                                          errorMessage, jitOptimize);

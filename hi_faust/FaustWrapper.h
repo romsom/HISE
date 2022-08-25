@@ -46,6 +46,8 @@ struct faust_wrapper {
             // no need to set jitFactory=nullptr, as it will be overwritten in the next step
         }
 
+        ui.reset();
+
         int llvm_argc = 0;
         const char* llvm_argv[] = {nullptr};
 

@@ -63,6 +63,16 @@ struct faust_ui : public ::faust::UI {
         return {};
     }
 
+    std::optional<std::shared_ptr<Parameter>> getParameterByZone(float* zone)
+    {
+        for (auto p : parameters)
+        {
+            if (p->zone == zone)
+                return p;
+        }
+        return {};
+    }
+
     std::vector<String> getParameterLabels()
     {
         std::vector<String> res;

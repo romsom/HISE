@@ -7,7 +7,7 @@ struct faust_wrapper;
 
 struct faust_node: public scriptnode::WrapperNode
 {
-    SET_HISE_NODE_ID("faust");
+    SN_NODE_ID("faust");
     JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node);
 	virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust"); }
 

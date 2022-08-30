@@ -30,6 +30,8 @@ struct faust_ui : public ::faust::UI {
         float min;
         float max;
         float step;
+	    std::optional<std::string> styleType;
+	    std::optional<std::unique_ptr<std::map<float,std::string>>> styleMap;
 
         Parameter(ControlType type,
                   String label,
@@ -128,12 +130,39 @@ struct faust_ui : public ::faust::UI {
 		return std::make_pair(type, values);
 	}
 
+	void applyStyle(shared_ptr<Parameter> p, std::string style)
+	{
+		auto style_ = parseMetaData(const char *style);
+		auto style_type = style_.first;
+		auto style_map = style.second;
+
+		p->styleType = std::make_optional(style_type);
+		p->styleMap = std::make_optional(std::make_unique(style_map));
+		// if (style_type == "menu") {
+		// 	std::vector<std::string> labels;
+		// 	std::vector<float> values;
+
+
+		// 	for (auto elm: style_map) {
+		// 		labels.push_back(elm.second());
+		// 		values.push_back(elm.first());
+		// 	}
+
+		// 	// p.setParameterValueNames(labels);
+		// }
+	}
 
     // -- metadata declarations
 
     virtual void declare(float* zone, const char* key, const char* val) override
     {
-        // TODO
+	    auto p = getParameterByZone(zone);
+	    if (p.has_value())
+	    {
+		    if (strcmp("style", val) = 0) {
+			    applyStyle(*p, std::string(val));
+		    }
+	    }
     }
 
     // Faust UI implementation

@@ -71,13 +71,13 @@ struct FaustMenuBar : public Component,
         MENU_OPTION_INVALID,
     };
 
-    const std::map<int, String> menuOptions = {
+    std::map<int, String> menuOptions = {
         {NEW_FILE, "Create new file"},
             // add description for more options here
         {MENU_OPTION_INVALID, "Invalid Option (BUG)"}
     };
 
-    String& getTextForMenuOptionId(int id)
+    String getTextForMenuOptionId(int id)
     {
         if (menuOptions.count(id) > 0) return menuOptions[id];
         return menuOptions[MENU_OPTION_INVALID];

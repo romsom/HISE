@@ -23,7 +23,7 @@ faust_node::faust_node(DspNetwork* n, ValueTree v) :
     };
 
     parameterListener.setCallback(getParameterTree(),
-                                  valuetree::AsyncMode::Synchronously, BIND_MEMBER_FUNCTION_2(parameterUpdated));
+                                  valuetree::AsyncMode::Synchronously, BIND_MEMBER_FUNCTION_2(faust_node::parameterUpdated));
 
     File f = getFaustRootFile();
     // Create directory if it's not already there

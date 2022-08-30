@@ -54,9 +54,9 @@ void faust_node::setupParameters()
         break;
         case faust_ui::ControlType::CHECK_BUTTON:
         {
-            parameter::data pd(p->label, 0.0, 1.0);
+            parameter::data pd(p->label, {0.0, 1.0});
             pd.setDefaultValue((double)(p->init));
-            pd.setParameterValueNames("off", "on");
+            pd.setParameterValueNames({"off", "on"});
             addNewParameter(pd);
         }
         break;

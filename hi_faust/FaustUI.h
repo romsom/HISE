@@ -130,14 +130,14 @@ struct faust_ui : public ::faust::UI {
 		return std::make_pair(type, values);
 	}
 
-	void applyStyle(shared_ptr<Parameter> p, std::string style)
+	void applyStyle(std::shared_ptr<Parameter> p, std::string style)
 	{
-		auto style_ = parseMetaData(const char *style);
+		auto style_ = parseMetaData(style);
 		auto style_type = style_.first;
-		auto style_map = style.second;
+		auto style_map = style_.second;
 
 		p->styleType = std::make_optional(style_type);
-		p->styleMap = std::make_optional(std::make_unique(style_map));
+		p->styleMap = std::make_optional(std::make_unique<std::map<float, std::string>>(style_map));
 		// if (style_type == "menu") {
 		// 	std::vector<std::string> labels;
 		// 	std::vector<float> values;
@@ -159,7 +159,7 @@ struct faust_ui : public ::faust::UI {
 	    auto p = getParameterByZone(zone);
 	    if (p.has_value())
 	    {
-		    if (strcmp("style", val) = 0) {
+		    if (strcmp("style", val) == 0) {
 			    applyStyle(*p, std::string(val));
 		    }
 	    }

@@ -41,13 +41,13 @@ void faust_node::setupParameters()
     // setup parameters from faust code
     for (auto p : faust->ui.parameters)
     {
+        DBG("adding parameter " << p->label << ", step: " << p->step);
         switch (p->type) {
         case faust_ui::ControlType::VERTICAL_SLIDER:
         case faust_ui::ControlType::HORIZONTAL_SLIDER:
         case faust_ui::ControlType::NUM_ENTRY:
         {
-            DBG("adding parameter " << p->label);
-            parameter::data pd(p->label, {(double)(p->min), (double)(p->max)});
+            parameter::data pd(p->label, {(double)(p->min), (double)(p->max), (double)(p->step)});
             pd.setDefaultValue((double)(p->init));
             addNewParameter(pd);
         }
@@ -99,8 +99,7 @@ void faust_node::parameterUpdated(ValueTree child, bool wasAdded)
         NodeBase::addParameter(p);
         {
             auto index = child.getParent().indexOf(child);
-            DBG("parameter added, index=");
-            DBG(index);
+            DBG("parameter added, index=" << index);
         }
     }
     else

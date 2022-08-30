@@ -1,4 +1,8 @@
 #ifndef __FAUST_UI_H
+#include <memory>
+#include <string>
+#include <regex>
+#include <iostream>
 
 namespace scriptnode {
 namespace faust {
@@ -94,6 +98,35 @@ struct faust_ui : public ::faust::UI {
         }
         return nullptr;
     }
+
+	std::pair<std::string, std::map<float,std::string>> parseMetaData(std::string style)
+	{
+		std::map<float,std::string> values;
+		std::string type = "";
+		std::string s(style);
+		std::regex type_re("([^{]+)(\\{(.*)\\})?");
+		std::regex kv_re("'([^']*)' *: *([^ ;]*)");
+		std::smatch type_match;
+
+		if (std::regex_match(s, type_match, type_re)) {
+			if (type_match.size() > 1) {
+				type = type_match[1];
+			}
+			if (type_match.size() == 4) {
+				std::string data = type_match[3];
+				std::smatch values_match;
+				while (std::regex_search(data, values_match, kv_re)) {
+					if (values_match.size() == 3) {
+						float k = std::stof(values_match[2]);
+						std::string v = values_match[1];
+						values.insert({k, v});
+					}
+					data = values_match.suffix();
+				}
+			}
+		}
+		return std::make_pair(type, values);
+	}
 
 
     // -- metadata declarations

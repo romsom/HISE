@@ -5,7 +5,8 @@ namespace faust {
 
 struct faust_wrapper;
 
-struct faust_node: public scriptnode::WrapperNode {
+struct faust_node: public scriptnode::WrapperNode
+{
     SET_HISE_NODE_ID("faust");
     JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node);
 

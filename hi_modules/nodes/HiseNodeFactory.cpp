@@ -1718,9 +1718,9 @@ Factory::Factory(DspNetwork* network) :
 	registerNode<waveshapers::dynamic::NodeType, waveshapers::dynamic::editor>();
 #endif
 
-#if HISE_INCLUDE_FAUST
-	registerNodeRaw<faust::faust_node>();
-#endif // HISE_INCLUDE_FAUST
+#if HISE_INCLUDE_FAUST_JIT
+	registerNodeRaw<faust::faust_jit_node>();
+#endif // HISE_INCLUDE_FAUST_JIT
 
 	registerModNode<dp<extra_mod>, data::ui::displaybuffer_editor>();
 	registerModNode<dp<pitch_mod>, data::ui::displaybuffer_editor>();

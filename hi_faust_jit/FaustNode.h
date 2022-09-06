@@ -3,15 +3,15 @@
 namespace scriptnode {
 namespace faust {
 
-struct faust_wrapper;
+struct faust_jit_wrapper;
 
-struct faust_node: public scriptnode::WrapperNode
+struct faust_jit_node: public faust_base_node
 {
-    SN_NODE_ID("faust");
-    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node);
-	virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust"); }
+    SN_NODE_ID("faust_jit_node");
+    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_jit_node);
+	virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust_jit_node"); }
 
-    faust_node(DspNetwork* n, ValueTree v);
+    faust_jit_node(DspNetwork* n, ValueTree v);
     void initialise(NodeBase* n);
     virtual void prepare(PrepareSpecs specs) override;
     virtual void reset() override;

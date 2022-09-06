@@ -21,18 +21,16 @@ struct faust_jit_node: public faust_base_node
     // void parameterUpdated(ValueTree child, bool wasAdded);
     // void addNewParameter(parameter::data p);
 
-    String getClassId();
-    void loadSource();
-    void setClass(const String& newClassId);
-
+    virtual String getClassId() override;
+    virtual StringArray getAvailableClassIds() override;
+    virtual void setClass(const String& newClassId) override;
     // valuetree::ChildListener parameterListener;
-
-	StringArray getAvailableClassIds();
 
 private:
     // void setupParameters();
     // void resetParameters();
     // std::unique_ptr<faust_jit_wrapper> faust;
+    void loadSource();
     NodePropertyT<String> classId;
     void updateClassId(Identifier, var newValue);
 };

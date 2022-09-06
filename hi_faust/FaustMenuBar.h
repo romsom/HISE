@@ -3,19 +3,19 @@
 namespace scriptnode {
 namespace faust {
 
-// Additional types for faust_node
+// Additional types for faust_base_node
 struct FaustMenuBar : public Component,
                       public ButtonListener,
                       public ComboBox::Listener
 
 {
 
-    FaustMenuBar(faust_node *n) :
+    FaustMenuBar(faust_base_node *n) :
         addButton("add", this, factory),
         editButton("faust", this, factory),
         node(n)
     {
-        // we must provide a valid faust_node pointer
+        // we must provide a valid faust_base_node pointer
         jassert(n);
         setLookAndFeel(&claf);
         setSize(200, 24);
@@ -59,7 +59,7 @@ struct FaustMenuBar : public Component,
     HiseShapeButton addButton;
     HiseShapeButton editButton;
 
-    WeakReference<faust_node> node;
+    WeakReference<faust_base_node> node;
     hise::ScriptnodeComboBoxLookAndFeel claf;
 
     // Define menu options for addButton

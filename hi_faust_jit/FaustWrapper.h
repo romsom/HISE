@@ -3,7 +3,7 @@
 #include <thread>
 using namespace std::chrono_literals;
 
-#ifndef __FAUST_WRAPPER_H
+#ifndef __FAUST_JIT_WRAPPER_H
 
 namespace scriptnode {
 namespace faust {
@@ -189,4 +189,4 @@ private:
 } // namespace faust
 } // namespace scriptnode
 
-#endif // __FAUST_WRAPPER_H
+#endif // __FAUST_JIT_WRAPPER_H

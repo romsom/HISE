@@ -5,13 +5,13 @@ namespace faust {
 
 struct faust_wrapper;
 
-struct faust_node_base: public scriptnode::WrapperNode
+struct faust_node: public scriptnode::WrapperNode
 {
-    SN_NODE_ID("faust_node_base");
-    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node_base);
-	virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust_node_base"); }
+    SN_NODE_ID("faust");
+    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_node);
+	virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust"); }
 
-    faust_node_base(DspNetwork* n, ValueTree v);
+    faust_node(DspNetwork* n, ValueTree v);
     void initialise(NodeBase* n);
     virtual void prepare(PrepareSpecs specs) override;
     virtual void reset() override;

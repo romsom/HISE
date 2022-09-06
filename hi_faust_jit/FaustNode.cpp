@@ -10,21 +10,11 @@
 namespace scriptnode {
 namespace faust {
 
-// faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
-//      NodeBase(n, v, 0) { }
 faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
-    WrapperNode(n, v),
+    faust_base_node(n, v),
     faust(new faust_jit_wrapper("faust_jit_node", getFaustRootFile().getFullPathName())),
     classId(PropertyIds::ClassId, "faust_jit_node")
 {
-    extraComponentFunction = [](void* o, PooledUIUpdater* u)
-    {
-        return new FaustMenuBar(static_cast<faust_jit_node*>(o));
-    };
-
-    parameterListener.setCallback(getParameterTree(),
-                                  valuetree::AsyncMode::Synchronously, BIND_MEMBER_FUNCTION_2(faust_jit_node::parameterUpdated));
-
     File f = getFaustRootFile();
     // Create directory if it's not already there
     if (!f.isDirectory()) {

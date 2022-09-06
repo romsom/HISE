@@ -35,10 +35,10 @@
 
 BEGIN_JUCE_MODULE_DECLARATION
 
-  ID:               hi_faust
+  ID:               hi_faust_static
   vendor:           Hart Instruments
   version:          0.0.1
-  name:             HISE Faust Integration
+  name:             HISE Faust Integration for Static Code Export
   description:      All processors for HISE
   website:          http://hise.audio
   license:          GPL
@@ -50,24 +50,24 @@ BEGIN_JUCE_MODULE_DECLARATION
 END_JUCE_MODULE_DECLARATION
 
 ******************************************************************************/
-#ifndef HI_FAUST_INCLUDED
-#define HI_FAUST_INCLUDED
+#ifndef HI_FAUST_STATIC_INCLUDED
+#define HI_FAUST_STATIC_INCLUDED
 
-/** Config: HISE_INCLUDE_FAUST
+/** Config: HISE_INCLUDE_FAUST_STATIC
 
 Enables the Faust Compiler
 */
-#ifndef HISE_INCLUDE_FAUST
-#define HISE_INCLUDE_FAUST 1
-#endif // HISE_INCLUDE_FAUST
+#ifndef HISE_INCLUDE_FAUST_STATIC
+#define HISE_INCLUDE_FAUST_STATIC 1
+#endif // HISE_INCLUDE_FAUST_STATIC
 
 
-#if HISE_INCLUDE_FAUST
+#if HISE_INCLUDE_FAUST_STATIC
 #include <optional>
 #include "../hi_dsp_library/hi_dsp_library.h" // NodeBase
 #include "../hi_core/hi_core.h" // FileHandlerBase
 #include "../hi_scripting/hi_scripting.h" // DspNetwork
 #include "FaustNode.h"
-#endif // HISE_INCLUDE_FAUST
+#endif // HISE_INCLUDE_FAUST_STATIC
 
-#endif // HI_FAUST_INCLUDED
+#endif // HI_FAUST_STATIC_INCLUDED

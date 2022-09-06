@@ -12,35 +12,27 @@ struct faust_jit_node: public faust_base_node
 	virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust_jit_node"); }
 
     faust_jit_node(DspNetwork* n, ValueTree v);
-    void initialise(NodeBase* n);
-    virtual void prepare(PrepareSpecs specs) override;
-    virtual void reset() override;
-    virtual void process(ProcessDataDyn& data) override;
-    virtual void processFrame(FrameType& data) override;
+    // void initialise(NodeBase* n);
+    // virtual void prepare(PrepareSpecs specs) override;
     static NodeBase* createNode(DspNetwork* n, ValueTree v);
     File getFaustRootFile();
     File getFaustFile(String basename);
 
-    void parameterUpdated(ValueTree child, bool wasAdded);
-
-    void addNewParameter(parameter::data p);
-
-    // provide correct pointer to createExtraComponent()
-    virtual void* getObjectPtr() override { return (void*)this; }
+    // void parameterUpdated(ValueTree child, bool wasAdded);
+    // void addNewParameter(parameter::data p);
 
     String getClassId();
     void loadSource();
     void setClass(const String& newClassId);
 
-    valuetree::ChildListener parameterListener;
+    // valuetree::ChildListener parameterListener;
 
 	StringArray getAvailableClassIds();
 
 private:
-    void setupParameters();
-    void resetParameters();
-    // void recompileFaustCode();
-    std::unique_ptr<faust_wrapper> faust;
+    // void setupParameters();
+    // void resetParameters();
+    // std::unique_ptr<faust_jit_wrapper> faust;
     NodePropertyT<String> classId;
     void updateClassId(Identifier, var newValue);
 };

@@ -55,6 +55,7 @@
 #define JUCE_MODULE_AVAILABLE_hi_dsp                      1
 #define JUCE_MODULE_AVAILABLE_hi_dsp_library              1
 #define JUCE_MODULE_AVAILABLE_hi_faust                    1
+#define JUCE_MODULE_AVAILABLE_hi_faust_static             1
 #define JUCE_MODULE_AVAILABLE_hi_lac                      1
 #define JUCE_MODULE_AVAILABLE_hi_modules                  1
 #define JUCE_MODULE_AVAILABLE_hi_rlottie                  1
@@ -143,6 +144,10 @@
  //#define FORCE_INPUT_CHANNELS 0
 #endif
 
+#ifndef    HISE_DEACTIVATE_OVERLAY
+ //#define HISE_DEACTIVATE_OVERLAY 0
+#endif
+
 #ifndef    HISE_MIDIFX_PLUGIN
  //#define HISE_MIDIFX_PLUGIN 0
 #endif
@@ -175,6 +180,10 @@
  #define   ENABLE_PLOTTER 1
 #endif
 
+#ifndef    HISE_NUM_MACROS
+ //#define HISE_NUM_MACROS 1
+#endif
+
 #ifndef    ENABLE_SCRIPTING_SAFE_CHECKS
  #define   ENABLE_SCRIPTING_SAFE_CHECKS 1
 #endif
@@ -189,6 +198,10 @@
 
 #ifndef    HISE_ENABLE_MIDI_INPUT_FOR_FX
  #define   HISE_ENABLE_MIDI_INPUT_FOR_FX 1
+#endif
+
+#ifndef    HISE_COMPLAIN_ABOUT_ILLEGAL_BUFFER_SIZE
+ //#define HISE_COMPLAIN_ABOUT_ILLEGAL_BUFFER_SIZE 1
 #endif
 
 #ifndef    ENABLE_ALL_PEAK_METERS
@@ -209,6 +222,14 @@
 
 #ifndef    ENABLE_HOST_INFO
  //#define ENABLE_HOST_INFO 1
+#endif
+
+#ifndef    HISE_USE_OPENGL_FOR_PLUGIN
+ //#define HISE_USE_OPENGL_FOR_PLUGIN 0
+#endif
+
+#ifndef    HISE_DEFAULT_OPENGL_VALUE
+ //#define HISE_DEFAULT_OPENGL_VALUE 1
 #endif
 
 #ifndef    ENABLE_STARTUP_LOGGER
@@ -263,6 +284,13 @@
 
 #ifndef    HISE_INCLUDE_FAUST
  #define   HISE_INCLUDE_FAUST 1
+#endif
+
+//==============================================================================
+// hi_faust_static flags:
+
+#ifndef    HISE_INCLUDE_FAUST_STATIC
+ //#define HISE_INCLUDE_FAUST_STATIC 1
 #endif
 
 //==============================================================================

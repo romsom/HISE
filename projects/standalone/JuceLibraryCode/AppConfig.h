@@ -55,7 +55,7 @@
 #define JUCE_MODULE_AVAILABLE_hi_dsp                      1
 #define JUCE_MODULE_AVAILABLE_hi_dsp_library              1
 #define JUCE_MODULE_AVAILABLE_hi_faust                    1
-#define JUCE_MODULE_AVAILABLE_hi_faust_static             1
+#define JUCE_MODULE_AVAILABLE_hi_faust_jit                1
 #define JUCE_MODULE_AVAILABLE_hi_lac                      1
 #define JUCE_MODULE_AVAILABLE_hi_modules                  1
 #define JUCE_MODULE_AVAILABLE_hi_rlottie                  1
@@ -287,10 +287,10 @@
 #endif
 
 //==============================================================================
-// hi_faust_static flags:
+// hi_faust_jit flags:
 
-#ifndef    HISE_INCLUDE_FAUST_STATIC
- //#define HISE_INCLUDE_FAUST_STATIC 1
+#ifndef    HISE_INCLUDE_FAUST_JIT
+ #define   HISE_INCLUDE_FAUST_JIT 1
 #endif
 
 //==============================================================================

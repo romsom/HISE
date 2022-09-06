@@ -20,7 +20,7 @@
 #include <hi_dsp/hi_dsp.h>
 #include <hi_dsp_library/hi_dsp_library.h>
 #include <hi_faust/hi_faust.h>
-#include <hi_faust_static/hi_faust_static.h>
+#include <hi_faust_jit/hi_faust_jit.h>
 #include <hi_lac/hi_lac.h>
 #include <hi_modules/hi_modules.h>
 #include <hi_rlottie/hi_rlottie.h>

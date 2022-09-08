@@ -9,20 +9,20 @@ namespace scriptnode {
 namespace faust {
 
 // wrapper struct for faust types to avoid name-clash
-struct faust_wrapper {
+struct faust_jit_wrapper : public faust_base_wrapper {
 
-    faust_wrapper(String classId, String projectDir):
+    faust_jit_wrapper(String classId, String projectDir):
+	    faust_base_wrapper(),
         sampleRate(0),
         jitFactory(nullptr),
-        jitDsp(nullptr),
         classId(classId),
         projectDir(projectDir)
     { }
 
-    ~faust_wrapper()
+    ~faust_jit_wrapper()
     {
-        if(jitDsp)
-            delete jitDsp;
+        if(faustDsp)
+            delete faustDsp;
         if (jitFactory)
             ::faust::deleteDSPFactory(jitFactory);
     }
@@ -32,7 +32,6 @@ struct faust_wrapper {
     int jitOptimize = 0; // -1 is maximum optimization
     int sampleRate;
     ::faust::llvm_dsp_factory* jitFactory;
-    ::faust::dsp *jitDsp;
     faust_ui ui;
     String projectDir;
 
@@ -53,12 +52,12 @@ struct faust_wrapper {
         std::this_thread::sleep_for(20ms);
 
         // cleanup old code and factories
-        // make sure jitDsp is nullptr in case we fail to recompile
-        // so we don't use an old deallocated jitDsp in process (checks
-        // for jitDsp == nullptr)
-        if (jitDsp != nullptr) {
-            delete jitDsp;
-            jitDsp = nullptr;
+        // make sure faustDsp is nullptr in case we fail to recompile
+        // so we don't use an old deallocated faustDsp in process (checks
+        // for faustDsp == nullptr)
+        if (faustDsp != nullptr) {
+            delete faustDsp;
+            faustDsp = nullptr;
         }
         if (jitFactory != nullptr) {
             ::faust::deleteDSPFactory(jitFactory);
@@ -79,23 +78,16 @@ struct faust_wrapper {
             return false;
         }
         std::cout << "Faust jit compilation successful" << std::endl;
-        jitDsp = jitFactory->createDSPInstance();
-        if (jitDsp == nullptr) {
+        faustDsp = jitFactory->createDSPInstance();
+        if (faustDsp == nullptr) {
             std::cout << "Faust DSP instantiation" << std::endl;
             return false;
         }
 
         std::cout << "Faust DSP instantiation successful" << std::endl;
 
-        jitDsp->buildUserInterface(&ui);
-
-
-        DBG("Faust parameters:");
-        for (auto p : ui.getParameterLabels()) {
-            DBG(p);
-        }
-
-        init();
+        faust_base_wrapper::setup();
+        
         return true;
     }
 
@@ -118,14 +110,14 @@ struct faust_wrapper {
     }
 
     void init() {
-        if (jitDsp)
-            jitDsp->init(sampleRate);
+        if (faustDsp)
+            faustDsp->init(sampleRate);
     }
 
     void reset()
     {
-        if (jitDsp) {
-            jitDsp->instanceClear();
+        if (faustDsp) {
+            faustDsp->instanceClear();
         }
     }
 
@@ -136,10 +128,10 @@ struct faust_wrapper {
     void process(ProcessDataDyn& data)
     {
         juce::ScopedTryLock stl(jitLock);
-        if (stl.isLocked() && jitDsp) {
+        if (stl.isLocked() && faustDsp) {
             // TODO: stable and sane sample format matching
-            int n_faust_inputs = jitDsp->getNumInputs();
-            int n_faust_outputs = jitDsp->getNumOutputs();
+            int n_faust_inputs = faustDsp->getNumInputs();
+            int n_faust_outputs = faustDsp->getNumOutputs();
             int n_hise_channels = data.getNumChannels();
 
             if (n_faust_inputs == n_hise_channels && n_faust_outputs == n_hise_channels) {
@@ -148,7 +140,7 @@ struct faust_wrapper {
                 // copy input data, because even with -inpl not all faust generated code can handle
                 // in-place processing
                 bufferChannelsData(channel_data, n_hise_channels, nFrames);
-                jitDsp->compute(nFrames, getRawInputChannelPointers(), channel_data);
+                faustDsp->compute(nFrames, getRawInputChannelPointers(), channel_data);
             } else {
                 // TODO error indication
             }

@@ -42,7 +42,7 @@ private:
     void setupParameters();
     void resetParameters();
     // void recompileFaustCode();
-    std::unique_ptr<faust_wrapper> faust;
+    std::unique_ptr<faust_base_wrapper> faust;
     // NodePropertyT<String> classId;
     // void updateClassId(Identifier, var newValue);
 };

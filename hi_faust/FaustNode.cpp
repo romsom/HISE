@@ -10,22 +10,23 @@
 namespace scriptnode {
 namespace faust {
 
-// faust_base_node_base::faust_base_node_base(DspNetwork* n, ValueTree v) :
+// faust_base_node::faust_base_node(DspNetwork* n, ValueTree v) :
 //      NodeBase(n, v, 0) { }
-faust_base_node_base::faust_base_node_base(DspNetwork* n, ValueTree v) :
+faust_base_node::faust_base_node(DspNetwork* n, ValueTree v, faust_base_wrapper* faustPtr) :
     WrapperNode(n, v),
+    faust(faustPtr)
 {
     extraComponentFunction = [](void* o, PooledUIUpdater* u)
     {
-        return new FaustMenuBar(static_cast<faust_base_node_base*>(o));
+        return new FaustMenuBar(static_cast<faust_base_node*>(o));
     };
 
     parameterListener.setCallback(getParameterTree(),
                                   valuetree::AsyncMode::Synchronously,
-                                  BIND_MEMBER_FUNCTION_2(faust_base_node_base::parameterUpdated));
+                                  BIND_MEMBER_FUNCTION_2(faust_base_node::parameterUpdated));
 }
 
-void faust_base_node_base::setupParameters()
+void faust_base_node::setupParameters()
 {
     // setup parameters from faust code
     for (auto p : faust->ui.parameters)
@@ -60,7 +61,7 @@ static void updateFaustZone(void* obj, double value)
 }
 
 // ParameterTree listener callback: This function is called when the ParameterTree changes
-void faust_base_node_base::parameterUpdated(ValueTree child, bool wasAdded)
+void faust_base_node::parameterUpdated(ValueTree child, bool wasAdded)
 {
     if (wasAdded)
     {
@@ -100,32 +101,32 @@ void faust_base_node_base::parameterUpdated(ValueTree child, bool wasAdded)
     }
 }
 
-void faust_base_node_base::initialise(NodeBase* n)
+void faust_base_node::initialise(NodeBase* n)
 { }
 
 
-void faust_base_node_base::prepare(PrepareSpecs specs)
+void faust_base_node::prepare(PrepareSpecs specs)
 {
     lastSpecs = specs;
     faust->prepare(specs);
 }
 
-void faust_base_node_base::reset()
+void faust_base_node::reset()
 {
     faust->reset();
 }
 
-void faust_base_node_base::process(ProcessDataDyn& data)
+void faust_base_node::process(ProcessDataDyn& data)
 {
     if (isBypassed()) return;
     faust->process(data);
 }
 
-void faust_base_node_base::processFrame(FrameType& data)
+void faust_base_node::processFrame(FrameType& data)
 { }
 
 
-void faust_base_node_base::addNewParameter(parameter::data p)
+void faust_base_node::addNewParameter(parameter::data p)
 {
     if (auto existing = getParameterFromName(p.info.getId()))
         return;
@@ -136,7 +137,7 @@ void faust_base_node_base::addNewParameter(parameter::data p)
 
 // Remove all HISE Parameters. Parameters will still be present in faust->ui
 // and will be cleared in faust->setup() automatically
-void faust_base_node_base::resetParameters()
+void faust_base_node::resetParameters()
 {
     DBG("Resetting parameters");
     getParameterTree().removeAllChildren(getUndoManager());

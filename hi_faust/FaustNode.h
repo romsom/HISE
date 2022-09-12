@@ -5,20 +5,20 @@ namespace faust {
 
 struct faust_wrapper;
 
-struct faust_base_node_base: public scriptnode::WrapperNode
+struct faust_base_node: public scriptnode::WrapperNode
 {
     SN_NODE_ID("faust");
-    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_base_node_base);
+    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_base_node);
     virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust"); }
 
-    faust_base_node_base(DspNetwork* n, ValueTree v);
+	faust_base_node(DspNetwork* n, ValueTree v, faust_base_wrapper* faustPtr);
     void initialise(NodeBase* n);
     virtual void prepare(PrepareSpecs specs) override;
     virtual void reset() override;
     virtual void process(ProcessDataDyn& data) override;
     virtual void processFrame(FrameType& data) override;
     // createNode() will have to be supplied by every derived class
-    static NodeBase* createNode(DspNetwork* n, ValueTree v) { return new faust_base_node_base(n, v); }
+	static NodeBase* createNode(DspNetwork* n, ValueTree v);
     // File getFaustRootFile();
     // File getFaustFile(String basename);
 

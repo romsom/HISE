@@ -11,8 +11,7 @@ namespace scriptnode {
 namespace faust {
 
 faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
-    faust_base_node(n, v),
-    faust(new faust_jit_wrapper("faust_jit_node", getFaustRootFile().getFullPathName())),
+	faust_base_node(n, v, new faust_jit_wrapper("faust_jit_node", getFaustRootFile().getFullPathName())),
     classId(PropertyIds::ClassId, "faust_jit_node")
 {
     File f = getFaustRootFile();

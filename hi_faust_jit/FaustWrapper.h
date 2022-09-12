@@ -13,7 +13,7 @@ namespace faust {
 struct faust_jit_wrapper : public faust_base_wrapper {
 
     faust_jit_wrapper(String classId, String projectDir):
-	    faust_base_wrapper(),
+	    faust_base_wrapper(nullptr),
         sampleRate(0),
         jitFactory(nullptr),
         classId(classId),

@@ -3,9 +3,7 @@
 #include <faust_wrap/dsp/llvm-dsp.h>
 #include <faust_wrap/gui/UI.h>
 
-#include "FaustUI.h"
 #include "FaustWrapper.h"
-#include "FaustMenuBar.h"
 
 namespace scriptnode {
 namespace faust {

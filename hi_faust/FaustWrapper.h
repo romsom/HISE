@@ -67,15 +67,12 @@ struct faust_base_wrapper {
     }
 
     void init() {
-        if (faustDsp)
-            faustDsp->init(sampleRate);
+	    faustDsp->init(sampleRate);
     }
 
     void reset()
     {
-        if (faustDsp) {
-            faustDsp->instanceClear();
-        }
+	    faustDsp->instanceClear();
     }
 
     String getClassId() {

@@ -3,7 +3,7 @@
 namespace scriptnode {
 namespace faust {
 
-struct faust_wrapper;
+struct faust_base_wrapper;
 
 struct faust_base_node: public scriptnode::WrapperNode
 {

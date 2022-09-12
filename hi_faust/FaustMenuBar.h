@@ -1,4 +1,5 @@
 #ifndef __FAUST_MENU_BAR_H
+#define __FAUST_MENU_BAR_H
 
 namespace scriptnode {
 namespace faust {

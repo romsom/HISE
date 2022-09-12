@@ -1,4 +1,5 @@
 #ifndef __FAUST_UI_H
+#define __FAUST_UI_H
 #include <memory>
 #include <string>
 #include <regex>

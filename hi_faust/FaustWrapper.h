@@ -4,6 +4,7 @@
 using namespace std::chrono_literals;
 
 #ifndef __FAUST_BASE_WRAPPER_H
+#define __FAUST_BASE_WRAPPER_H
 
 namespace scriptnode {
 namespace faust {

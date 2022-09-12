@@ -46,6 +46,15 @@ private:
     // NodePropertyT<String> classId;
     // void updateClassId(Identifier, var newValue);
 };
+
+template <class FaustDsp>
+struct faust_node: public faust_base_node {
+	faust_node(DspNetwork* n, ValueTree v):
+		faust_base_node(n, v, (faust_base_wrapper*)(new faust_wrapper<FaustDsp>))
+	{ }
+    // createNode() will have to be supplied by every derived class
+    static NodeBase* createNode(DspNetwork* n, ValueTree v) { return new faust_node(n, v); }
+};
 }
 }
 

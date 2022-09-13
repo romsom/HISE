@@ -126,6 +126,10 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         return classId;
     }
 
+	virtual void setCode(std::string newCode) override {
+		code = newCode;
+	}
+
     void process(ProcessDataDyn& data)
     {
 	    // run jitted code only while holding the corresponding lock:

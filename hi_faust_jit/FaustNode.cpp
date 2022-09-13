@@ -172,7 +172,7 @@ void faust_jit_node::loadSource()
 
     // Load file and recompile
     String code = sourceFile.loadFileAsString();
-    faust->code = code.toStdString();
+    faust->setCode(code.toStdString());
     // setup dsp
     bool success = faust->setup();
     std::cout << "Faust initialization: " << (success ? "success" : "failed") << std::endl;

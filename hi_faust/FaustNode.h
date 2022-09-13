@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __FAUST_NODE
+#define __FAUST_NODE
 
 namespace scriptnode {
 namespace faust {
@@ -52,9 +53,9 @@ struct faust_node: public faust_base_node {
 	faust_node(DspNetwork* n, ValueTree v):
 		faust_base_node(n, v, (faust_base_wrapper*)(new faust_wrapper<FaustDsp>))
 	{ }
-    // createNode() will have to be supplied by every derived class
     static NodeBase* createNode(DspNetwork* n, ValueTree v) { return new faust_node(n, v); }
 };
 }
 }
 
+#endif // __FAUST_NODE

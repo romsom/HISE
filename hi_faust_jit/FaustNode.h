@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __FAUST_JIT_NODE
+#define __FAUST_JIT_NODE
 
 namespace scriptnode {
 namespace faust {
@@ -37,3 +38,4 @@ private:
 }
 }
 
+#endif // __FAUST_JIT_NODE

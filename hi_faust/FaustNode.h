@@ -38,12 +38,13 @@ struct faust_base_node: public scriptnode::WrapperNode
     // provide correct pointer to createExtraComponent()
     virtual void* getObjectPtr() override { return (void*)this; }
 
-
-private:
+protected:
+    std::unique_ptr<faust_base_wrapper> faust;
     void setupParameters();
     void resetParameters();
+
+private:
     // void recompileFaustCode();
-    std::unique_ptr<faust_base_wrapper> faust;
     // NodePropertyT<String> classId;
     // void updateClassId(Identifier, var newValue);
 };

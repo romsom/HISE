@@ -125,6 +125,16 @@ void faust_base_node::process(ProcessDataDyn& data)
 void faust_base_node::processFrame(FrameType& data)
 { }
 
+String faust_base_node::getClassId()
+{
+	return "invalid/faust_base_node";
+}
+void faust_base_node::setClass(const String& newClassId) { }
+
+StringArray faust_base_node::getAvailableClassIds()
+{
+	return StringArray();
+}
 
 void faust_base_node::addNewParameter(parameter::data p)
 {

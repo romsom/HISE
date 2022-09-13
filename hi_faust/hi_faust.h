@@ -64,9 +64,7 @@ Enables the Faust Compiler
 
 #if HISE_INCLUDE_FAUST
 #include <optional>
-#include "../hi_dsp_library/hi_dsp_library.h" // NodeBase
-#include "../hi_core/hi_core.h" // FileHandlerBase
-#include "../hi_scripting/hi_scripting.h" // DspNetwork
+#include "../hi_scripting/hi_scripting.h" // DspNetwork, NodeBase, WrapperNode
 #include <faust_wrap/dsp/dsp.h>
 #include <faust_wrap/gui/UI.h>
 #include "FaustUI.h"

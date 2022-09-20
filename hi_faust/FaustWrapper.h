@@ -12,7 +12,7 @@ namespace faust {
 // wrapper struct for faust types to avoid name-clash
 struct faust_base_wrapper {
 
-	faust_base_wrapper(::faust::dsp* FaustDsp):
+	faust_base_wrapper(::faust::dsp* faustDsp):
 	    faustDsp(faustDsp),  // Unless faustDsp is set to a non-nullptr value in a subclass, several methods will cause a segfault
         sampleRate(0),
         _nChannels(0),

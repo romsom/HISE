@@ -14,7 +14,6 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 
     faust_jit_wrapper(String classId, String projectDir):
 	    faust_base_wrapper(nullptr),
-        sampleRate(0),
         jitFactory(nullptr),
         classId(classId),
         projectDir(projectDir)
@@ -31,19 +30,11 @@ struct faust_jit_wrapper : public faust_base_wrapper {
     std::string code;
     std::string errorMessage;
     int jitOptimize = 0; // -1 is maximum optimization
-    int sampleRate;
     ::faust::llvm_dsp_factory* jitFactory;
-    faust_ui ui;
     String projectDir;
 
     // Mutex for synchronization of compilation and processing
     juce::CriticalSection jitLock;
-
-    // audio buffer
-    int _nChannels;
-    int _nFramesMax;
-    std::vector<float> inputBuffer;
-    std::vector<float*> inputChannelPointers;
 
     bool setup() {
         juce::ScopedLock sl(jitLock);

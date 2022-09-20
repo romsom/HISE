@@ -7,18 +7,8 @@ namespace scriptnode {
 namespace faust {
 
 faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
-	faust_base_node(n, v, new faust_jit_wrapper("faust_jit_node", getFaustRootFile().getFullPathName())),
-    classId(PropertyIds::ClassId, "faust_jit_node")
+	faust_base_node(n, v)
 {
-    File f = getFaustRootFile();
-    // Create directory if it's not already there
-    if (!f.isDirectory()) {
-        auto res = f.createDirectory();
-        //DBG(res);
-    }
-    DBG(f.getFullPathName());
-    // we can't init yet, because we don't know the sample rate
-    setClass(classId.getValue());
 }
 
 // void faust_jit_node::setupParameters()
@@ -113,23 +103,6 @@ NodeBase* faust_jit_node::createNode(DspNetwork* n, ValueTree v)
     return new faust_jit_node(n, v);
 }
 
-File faust_jit_node::getFaustRootFile()
-{
-    auto mc = this->getScriptProcessor()->getMainController_();
-    auto dspRoot = mc->getCurrentFileHandler().getSubDirectory(FileHandlerBase::DspNetworks);
-    return dspRoot.getChildFile("CodeLibrary/faust_jit_node");
-}
-
-/*
- * Lookup a Faust source code file for this node.
- * The `basename` is the name without any extension.
- */
-File faust_jit_node::getFaustFile(String basename)
-{
-    auto nodeRoot = getFaustRootFile();
-    return nodeRoot.getChildFile(basename + ".dsp");
-}
-
 
 
 // void faust_jit_node::addNewParameter(parameter::data p)
@@ -149,65 +122,6 @@ File faust_jit_node::getFaustFile(String basename)
 //     getParameterTree().removeAllChildren(getUndoManager());
 // }
 
-String faust_jit_node::getClassId()
-{
-    return classId.getValue();
-}
-
-void faust_jit_node::loadSource()
-{
-    auto newClassId = getClassId();
-    if (faust->getClassId() == newClassId) return;
-    File sourceFile = getFaustFile(newClassId);
-
-    // Create new file if necessary
-    if (!sourceFile.existsAsFile()) {
-        auto res = sourceFile.create();
-        if (res.failed()) {
-            std::cerr << "Failed creating file \"" + sourceFile.getFullPathName() + "\"" << std::endl;
-        }
-    }
-
-    // Load file and recompile
-    String code = sourceFile.loadFileAsString();
-    faust->setCode(code.toStdString());
-    // setup dsp
-    bool success = faust->setup();
-    std::cout << "Faust initialization: " << (success ? "success" : "failed") << std::endl;
-    // TODO: error handling
-    if (!success)
-    {
-        auto p = dynamic_cast<Processor*>(getScriptProcessor());
-
-        debugError(p, "FaustError");
-    }
-    setupParameters();
-}
-
-void faust_jit_node::setClass(const String& newClassId)
-{
-    classId.storeValue(newClassId, getUndoManager());
-    updateClassId({}, newClassId);
-    resetParameters();
-    loadSource();
-}
-
-void faust_jit_node::updateClassId(Identifier, var newValue)
-{
-    auto newId = newValue.toString();
-
-    DBG(newId);
-    if (newId.isNotEmpty())
-    {
-        auto nb = getRootNetwork()->codeManager.getOrCreate(getTypeId(), Identifier(newValue.toString()));
-        // TODO: workbench
-    }
-}
-
-StringArray faust_jit_node::getAvailableClassIds()
-{
-    return getRootNetwork()->codeManager.getClassList(getTypeId());
-}
 
 
 } // namespace faust

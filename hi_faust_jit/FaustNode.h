@@ -16,24 +16,21 @@ struct faust_jit_node: public faust_base_node
     // void initialise(NodeBase* n);
     // virtual void prepare(PrepareSpecs specs) override;
     static NodeBase* createNode(DspNetwork* n, ValueTree v);
-    File getFaustRootFile();
-    File getFaustFile(String basename);
 
     // void parameterUpdated(ValueTree child, bool wasAdded);
     // void addNewParameter(parameter::data p);
 
-    virtual String getClassId() override;
-    virtual StringArray getAvailableClassIds() override;
-    virtual void setClass(const String& newClassId) override;
+    // virtual String getClassId() override;
+    // virtual StringArray getAvailableClassIds() override;
+    // virtual void setClass(const String& newClassId) override;
     // valuetree::ChildListener parameterListener;
 
 private:
     // void setupParameters();
     // void resetParameters();
     // std::unique_ptr<faust_jit_wrapper> faust;
-    void loadSource();
-    NodePropertyT<String> classId;
-    void updateClassId(Identifier, var newValue);
+    // NodePropertyT<String> classId;
+    // void updateClassId(Identifier, var newValue);
 };
 }
 }

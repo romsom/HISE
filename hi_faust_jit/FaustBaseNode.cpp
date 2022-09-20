@@ -2,8 +2,6 @@
 
 #include <faust_wrap/dsp/llvm-dsp.h>
 #include <faust_wrap/gui/UI.h>
-
-#include "FaustUI.h"
 #include "FaustWrapper.h"
 #include "FaustMenuBar.h"
 
@@ -12,7 +10,7 @@ namespace faust {
 
 // faust_base_node::faust_base_node(DspNetwork* n, ValueTree v) :
 //      NodeBase(n, v, 0) { }
-faust_base_node::faust_base_node(DspNetwork* n, ValueTree v, faust_base_wrapper* faustPtr) :
+faust_base_node::faust_base_node(DspNetwork* n, ValueTree v, faust_jit_wrapper* faustPtr) :
     WrapperNode(n, v),
     faust(faustPtr)
 {

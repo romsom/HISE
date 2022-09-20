@@ -64,12 +64,13 @@ Enables the Faust Compiler
 
 #if HISE_INCLUDE_FAUST
 #include <optional>
+// TODO replace with hi_dsp_library
 #include "../hi_scripting/hi_scripting.h" // DspNetwork, NodeBase, WrapperNode
 #include <faust_wrap/dsp/dsp.h>
 #include <faust_wrap/gui/UI.h>
 #include "FaustUI.h"
 #include "FaustWrapper.h"
-#include "FaustNode.h"
+#include "FaustStaticWrapper.h"
 #endif // HISE_INCLUDE_FAUST
 
 #endif // HI_FAUST_INCLUDED

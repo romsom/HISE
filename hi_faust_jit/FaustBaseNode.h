@@ -1,10 +1,10 @@
-#ifndef __FAUST_NODE
-#define __FAUST_NODE
+#ifndef __FAUST_BASE_NODE
+#define __FAUST_BASE_NODE
 
 namespace scriptnode {
 namespace faust {
 
-struct faust_base_wrapper;
+struct faust_jit_wrapper;
 
 struct faust_base_node: public scriptnode::WrapperNode
 {
@@ -12,7 +12,7 @@ struct faust_base_node: public scriptnode::WrapperNode
     JUCE_DECLARE_WEAK_REFERENCEABLE(faust_base_node);
     virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust"); }
 
-	faust_base_node(DspNetwork* n, ValueTree v, faust_base_wrapper* faustPtr);
+	faust_base_node(DspNetwork* n, ValueTree v, faust_jit_wrapper* faustPtr);
     void initialise(NodeBase* n);
     virtual void prepare(PrepareSpecs specs) override;
     virtual void reset() override;
@@ -39,7 +39,7 @@ struct faust_base_node: public scriptnode::WrapperNode
     virtual void* getObjectPtr() override { return (void*)this; }
 
 protected:
-    std::unique_ptr<faust_base_wrapper> faust;
+    std::unique_ptr<faust_jit_wrapper> faust;
     void setupParameters();
     void resetParameters();
 
@@ -52,11 +52,11 @@ private:
 template <class FaustDsp>
 struct faust_node: public faust_base_node {
 	faust_node(DspNetwork* n, ValueTree v):
-		faust_base_node(n, v, (faust_base_wrapper*)(new faust_wrapper<FaustDsp>))
+		faust_base_node(n, v, (faust_jit_wrapper*)(new faust_wrapper<FaustDsp>))
 	{ }
     static NodeBase* createNode(DspNetwork* n, ValueTree v) { return new faust_node(n, v); }
 };
 }
 }
 
-#endif // __FAUST_NODE
+#endif // __FAUST_BASE_NODE

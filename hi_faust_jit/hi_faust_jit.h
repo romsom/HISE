@@ -67,6 +67,7 @@ Enables the Faust JIT Compiler
 #include "../hi_faust/hi_faust.h"
 #include "../hi_scripting/hi_scripting.h" // DspNetwork
 #include "../hi_core/hi_core.h" // FileHandlerBase
+#include "FaustBaseNode.h"
 #include "FaustNode.h"
 #endif // HISE_INCLUDE_FAUST_JIT
 

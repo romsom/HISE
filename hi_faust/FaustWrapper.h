@@ -79,10 +79,6 @@ struct faust_base_wrapper {
         return classId;
     }
 
-	virtual void setCode(std::string newCode) {
-		DBG("Called setCode() on non-jit faust_wrapper.");
-	}
-
     void process(ProcessDataDyn& data)
     {
 	    // we have either a static ::faust::dsp object here, or we hold the jit lock

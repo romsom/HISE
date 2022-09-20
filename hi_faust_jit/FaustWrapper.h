@@ -36,6 +36,7 @@ struct faust_jit_wrapper : public faust_base_wrapper {
     // Mutex for synchronization of compilation and processing
     juce::CriticalSection jitLock;
 
+
     bool setup() {
         juce::ScopedLock sl(jitLock);
         // because the audio thread is real-time, we can wait for the duration of one

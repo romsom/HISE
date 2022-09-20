@@ -17,8 +17,6 @@ template <int NV, class FaustClass, class MC> struct faust_static_wrapper: publi
 	static constexpr bool isPolyphonic() { return NV > 1; };
 	// set to true if your node produces a tail
 	static constexpr bool hasTail() { return false; };
-	// Undefine this method if you want a dynamic channel count
-	static constexpr int getFixChannelAmount() { return 2; };
 	
 	// Define the amount and types of external data slots you want to use
 	static constexpr int NumTables = 0;
@@ -100,6 +98,7 @@ struct StereoDelayMetaData {
 };
 template <int NV>
 using faust_mockup = scriptnode::faust::faust_static_wrapper<1, _stereo_delay, StereoDelayMetaData>;
-}
+} // namespace project
+
 
 #endif // 0

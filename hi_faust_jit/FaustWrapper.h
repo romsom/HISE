@@ -117,7 +117,8 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         return classId;
     }
 
-	virtual void setCode(std::string newCode) override {
+	void setCode(String newClassId, std::string newCode) {
+		classId = newClassId;
 		code = newCode;
 	}
 
@@ -157,8 +158,58 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         }
     }
 
+	std::string classIdForFaustCode() {
+		return "_" + classId.toStdString();
+	}
+
+	std::string genStaticInstanceBody() {
+		std::string _classId = classId.toStdString();
+		std::string metaDataClass = _classId + "MetaData";
+		std::string faustClassId = classIdForFaustCode();
+		std::string body =
+			"using Meta = faust::Meta;"
+			"using UI = faust::UI;"
+			"#include \"src/" + _classId + ".cpp\""
+			"namespace project {"
+			"struct " + metaDataClass + " {"
+			"		SN_NODE_ID(\"" + _classId + "\");"
+			"};"
+			"template <int NV>"
+			"using " + _classId + " = scriptnode::faust::faust_static_wrapper<1, " + faustClassId + " , " + metaDataClass + ">;"
+			"} // namespace project";
+		return body;
+	}
+
+	bool genAuxFile(int argc, const char* argv[]) {
+		std::string aux_content = "none";
+		std::string error_msg;
+
+		if (!::faust::generateAuxFilesFromString(classIdForFaustCode(), code, argc, argv, error_msg)) {
+			// TODO replace DBG with appropriate error logging function
+			DBG("hi_faust_jit: Aux file generation failed:");
+			DBG("argv: ");
+			while (*argv) {
+				DBG(std::string("\t") + (*argv++));
+			}
+			DBG("result: " + error_msg);
+			return false;
+		}
+		return true;
+	}
+
+	std::string genStaticInstanceCode(std::string dest_dir) {
+		std::string dest_file = classId.toStdString() + ".cpp";
+		int argc = 13;
+		const char* argv[] = {"-rui", "-I", projectDir.toRawUTF8(), "-lang", "cpp", "-scn", "faust::dsp", "-cn", classIdForFaustCode().c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str(), nullptr};
+		if (genAuxFile(argc, argv)) {
+			DBG("hi_faust_jit: Static code generation successful: " + dest_file);
+			return dest_file;
+		}
+		return "";
+	}
+
 private:
-    String classId;
+	String classId;
 };
 
 } // namespace faust

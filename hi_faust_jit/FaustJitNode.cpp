@@ -1,6 +1,7 @@
 #define FAUSTFLOAT float
 
 #include <faust_wrap/dsp/llvm-dsp.h>
+#include <faust_wrap/dsp/libfaust.h>
 #include <faust_wrap/gui/UI.h>
 #include "FaustWrapper.h"
 #include "FaustMenuBar.h"
@@ -173,7 +174,7 @@ void faust_jit_node::loadSource()
 
     // Load file and recompile
     String code = sourceFile.loadFileAsString();
-    faust->setCode(code.toStdString());
+    faust->setCode(newClassId, code.toStdString());
     // setup dsp
     bool success = faust->setup();
     std::cout << "Faust initialization: " << (success ? "success" : "failed") << std::endl;
@@ -183,6 +184,8 @@ void faust_jit_node::loadSource()
         auto p = dynamic_cast<Processor*>(getScriptProcessor());
 
         debugError(p, "FaustError");
+    } else {
+	    faust->genStaticInstanceCode(getFaustRootFile().getFullPathName().toStdString());
     }
     setupParameters();
 }

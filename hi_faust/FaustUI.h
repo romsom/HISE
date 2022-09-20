@@ -4,6 +4,7 @@
 #include <string>
 #include <regex>
 #include <iostream>
+#include <optional>
 
 namespace scriptnode {
 namespace faust {

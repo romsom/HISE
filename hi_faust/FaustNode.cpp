@@ -32,25 +32,8 @@ void faust_base_node::setupParameters()
     for (auto p : faust->ui.parameters)
     {
         DBG("adding parameter " << p->label << ", step: " << p->step);
-        switch (p->type) {
-        case faust_ui::ControlType::VERTICAL_SLIDER:
-        case faust_ui::ControlType::HORIZONTAL_SLIDER:
-        case faust_ui::ControlType::NUM_ENTRY:
-        {
-            parameter::data pd(p->label, {(double)(p->min), (double)(p->max), (double)(p->step)});
-            pd.setDefaultValue((double)(p->init));
-            addNewParameter(pd);
-        }
-        break;
-        case faust_ui::ControlType::CHECK_BUTTON:
-        {
-            parameter::data pd(p->label, {0.0, 1.0});
-            pd.setDefaultValue((double)(p->init));
-            pd.setParameterValueNames({"off", "on"});
-            addNewParameter(pd);
-        }
-        break;
-        }
+        auto pd = p->toParameterData();
+        addNewParameter(pd);
     }
     DBG("Num parameters in NodeBase: " << getNumParameters());
 }

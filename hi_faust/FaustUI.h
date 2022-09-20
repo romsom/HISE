@@ -49,6 +49,30 @@ struct faust_ui : public ::faust::UI {
             max(max),
             step(step) {}
 
+	    parameter::data toParameterData() const {
+		    switch (type) {
+		    case faust_ui::ControlType::VERTICAL_SLIDER:
+		    case faust_ui::ControlType::HORIZONTAL_SLIDER:
+		    case faust_ui::ControlType::NUM_ENTRY:
+		    {
+			    parameter::data pd(label, {(double)(min), (double)(max), (double)(step)});
+			    pd.setDefaultValue((double)(init));
+			    return pd;
+		    }
+		    break;
+		    case faust_ui::ControlType::CHECK_BUTTON:
+		    {
+			    parameter::data pd(label, {0.0, 1.0});
+			    pd.setDefaultValue((double)(init));
+			    pd.setParameterValueNames({"off", "on"});
+			    return pd;
+		    }
+		    break;
+		    }
+		    parameter::data pd("invalid", {0., 0.});
+		    return pd;
+	    }
+
     };
 
     faust_ui() { }

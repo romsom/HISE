@@ -1,25 +1,28 @@
-#ifndef __FAUST_BASE_NODE
-#define __FAUST_BASE_NODE
+#ifndef __FAUST_JIT_NODE
+#define __FAUST_JIT_NODE
 
 namespace scriptnode {
 namespace faust {
 
 struct faust_jit_wrapper;
 
-struct faust_base_node: public scriptnode::WrapperNode
+struct faust_jit_node: public scriptnode::WrapperNode
 {
     SN_NODE_ID("faust");
-    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_base_node);
+    JUCE_DECLARE_WEAK_REFERENCEABLE(faust_jit_node);
     virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust"); }
 
-	faust_base_node(DspNetwork* n, ValueTree v);
+	faust_jit_node(DspNetwork* n, ValueTree v);
     void initialise(NodeBase* n);
     virtual void prepare(PrepareSpecs specs) override;
     virtual void reset() override;
     virtual void process(ProcessDataDyn& data) override;
     virtual void processFrame(FrameType& data) override;
     // createNode() will have to be supplied by every derived class
-	static NodeBase* createNode(DspNetwork* n, ValueTree v);
+	static NodeBase* createNode(DspNetwork* n, ValueTree v)
+	{
+		return new faust_jit_node(n, v);
+	}
     // File getFaustRootFile();
     // File getFaustFile(String basename);
 
@@ -55,4 +58,4 @@ private:
 } // namespace faust
 } // namespace scriptnode
 
-#endif // __FAUST_BASE_NODE
+#endif // __FAUST_JIT_NODE

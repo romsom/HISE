@@ -186,6 +186,7 @@ void faust_jit_node::loadSource()
         debugError(p, "FaustError");
     } else {
 	    faust->genStaticInstanceCode(getFaustRootFile().getFullPathName().toStdString());
+	    faust->genStaticInstanceBody(getFaustRootFile().getChildFile("tmp").getFullPathName().toStdString());
     }
     setupParameters();
 }

@@ -163,22 +163,33 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 		return "_" + classId.toStdString();
 	}
 
-	std::string genStaticInstanceBody() {
+	std::string genStaticInstanceBody(std::string dest_dir) {
 		std::string _classId = classId.toStdString();
+		std::string dest_file = _classId + ".cpp";
 		std::string metaDataClass = _classId + "MetaData";
 		std::string faustClassId = classIdForFaustCode();
 		std::string body =
-			"using Meta = faust::Meta;"
-			"using UI = faust::UI;"
-			"#include \"src/" + _classId + ".cpp\""
-			"namespace project {"
-			"struct " + metaDataClass + " {"
-			"		SN_NODE_ID(\"" + _classId + "\");"
-			"};"
-			"template <int NV>"
-			"using " + _classId + " = scriptnode::faust::faust_static_wrapper<1, " + faustClassId + " , " + metaDataClass + ">;"
-			"} // namespace project";
-		return body;
+			"using Meta = faust::Meta;\n"
+			"using UI = faust::UI;\n"
+			"#include \"src/" + _classId + ".cpp\"\n"
+			"namespace project {\n"
+			"struct " + metaDataClass + " {\n"
+			"		SN_NODE_ID(\"" + _classId + "\");\n"
+			"};\n"
+			"template <int NV>\n"
+			"using " + _classId + " = scriptnode::faust::faust_static_wrapper<1, " + faustClassId + " , " + metaDataClass + ">;\n"
+			"} // namespace project\n";
+
+		auto dir = juce::File(dest_dir);
+		if (!dir.isDirectory())
+			return "";
+
+		auto dest = dir.getChildFile(dest_file);
+		dest.replaceWithText(body);
+
+		DBG("Static body file generation successful: " + dest.getFullPathName());
+
+		return dest_file;
 	}
 
 	bool genAuxFile(int argc, const char* argv[]) {

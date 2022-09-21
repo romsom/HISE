@@ -880,6 +880,8 @@ private:
 
 	Node::Ptr getNode(const NamespacedIdentifier& id, bool allowZeroMatch) const;
 
+	Node::Ptr parseFaustNode(Node::Ptr u);
+
 	Node::Ptr parseRoutingNode(Node::Ptr u);
 
 	Node::Ptr parseComplexDataNode(Node::Ptr u, bool flushNode=true);

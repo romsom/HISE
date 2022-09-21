@@ -13,7 +13,7 @@ namespace faust {
 //      NodeBase(n, v, 0) { }
 faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
 	WrapperNode(n, v),
-    classId(PropertyIds::ClassId, "faust"),
+    classId(PropertyIds::ClassId, ""),
     faust(new faust_jit_wrapper("faust", getFaustRootFile().getFullPathName()))
 {
     extraComponentFunction = [](void* o, PooledUIUpdater* u)
@@ -32,6 +32,7 @@ faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
     }
     DBG(f.getFullPathName());
     // we can't init yet, because we don't know the sample rate
+    initialise(this);
     setClass(classId.getValue());
 }
 
@@ -94,7 +95,10 @@ void faust_jit_node::parameterUpdated(ValueTree child, bool wasAdded)
 }
 
 void faust_jit_node::initialise(NodeBase* n)
-{ }
+{
+	classId.initialise(n);
+	classId.setAdditionalCallback(BIND_MEMBER_FUNCTION_2(faust_jit_node::updateClassId), true);
+}
 
 
 void faust_jit_node::prepare(PrepareSpecs specs)

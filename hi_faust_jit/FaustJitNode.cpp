@@ -125,7 +125,7 @@ File faust_jit_node::getFaustRootFile()
 {
     auto mc = this->getScriptProcessor()->getMainController_();
     auto dspRoot = mc->getCurrentFileHandler().getSubDirectory(FileHandlerBase::DspNetworks);
-    return dspRoot.getChildFile("CodeLibrary/faust");
+    return dspRoot.getChildFile("CodeLibrary/" + getStaticId().toString());
 }
 
 /*

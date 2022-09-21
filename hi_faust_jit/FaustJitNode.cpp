@@ -160,6 +160,8 @@ void faust_jit_node::loadSource()
 {
     auto newClassId = getClassId();
     if (faust->getClassId() == newClassId) return;
+
+    resetParameters();
     File sourceFile = getFaustFile(newClassId);
 
     // Create new file if necessary
@@ -195,7 +197,6 @@ void faust_jit_node::setClass(const String& newClassId)
 {
     classId.storeValue(newClassId, getUndoManager());
     updateClassId({}, newClassId);
-    resetParameters();
     loadSource();
 }
 

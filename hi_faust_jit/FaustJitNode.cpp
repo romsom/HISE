@@ -30,7 +30,6 @@ faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
     if (!f.isDirectory()) {
         auto res = f.createDirectory();
     }
-    DBG(f.getFullPathName());
     // we can't init yet, because we don't know the sample rate
     initialise(this);
     setClass(classId.getValue());
@@ -88,8 +87,7 @@ void faust_jit_node::parameterUpdated(ValueTree child, bool wasAdded)
     else
     {
         String parameterLabel = child.getProperty(PropertyIds::ID);
-        DBG("removing parameter: ");
-        DBG(parameterLabel);
+        DBG("removing parameter: " + parameterLabel);
         NodeBase::removeParameter(parameterLabel);
     }
 }
@@ -137,6 +135,7 @@ File faust_jit_node::getFaustFile(String basename)
     auto nodeRoot = getFaustRootFile();
     return nodeRoot.getChildFile(basename + ".dsp");
 }
+
 
 void faust_jit_node::addNewParameter(parameter::data p)
 {

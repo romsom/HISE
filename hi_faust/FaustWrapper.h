@@ -128,20 +128,6 @@ private:
     String classId;
 };
 
-/**
- * Templated wrapper for statically generated Faust DSP class
- */
-template <class FaustDsp>
-struct faust_wrapper : public faust_base_wrapper {
-	faust_wrapper():
-		faust_base_wrapper((::faust::dsp*)(new FaustDsp))
-	{ }
-
-	~faust_wrapper() {
-		delete (FaustDsp*)faustDsp;
-	}
-};
-
 } // namespace faust
 } // namespace scriptnode
 

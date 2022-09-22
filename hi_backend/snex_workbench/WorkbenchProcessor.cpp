@@ -1097,28 +1097,33 @@ void DspNetworkCompileExporter::run()
 		}
 	}
 	DBG("sourceDir: " + sourceDir.getFullPathName());
-	auto srcDir = BackendDllManager::getThirdPartyFiles(getMainController(), true).getFirst();
-	DBG("srcDir: " + srcDir.getFullPathName());
-	// we either need to hard code this path and keep it consistent with faust_jit_node or hi_backend will have to depend on hi_faust_jit
-	auto codeLibDir = getFolder(BackendDllManager::FolderSubType::CodeLibrary).getChild("faust");
-	DBG("codeLibDir: " + codeLibDir.getFullPathName());
+	auto codeDestDir = getFolder(BackendDllManager::FolderSubType::ThirdParty).getChildFile("src");
+	auto codeDestDirPath = codeDestDir.getFullPathName().toStdString();
+	if (!codeDestDir.isDirectory())
+		codeDestDir.createDirectory();
+	DBG("codeDestDirPath: " + codeDestDirPath);
 
-	// TODO create all necessary files before thirdPartyFiles
+	auto boilerplateDestDirPath = codeDestDir.getParentDirectory().getFullPathName().toStdString();
+	DBG("boilerplateDestDirPath: " + boilerplateDestDirPath);
+	// we either need to hard code this path and keep it consistent with faust_jit_node or hi_backend will have to depend on hi_faust_jit
+	auto codeLibDir = getFolder(BackendDllManager::FolderSubType::CodeLibrary).getChildFile("faust");
+	auto codeLibDirPath = codeLibDir.getFullPathName().toStdString();
+	DBG("codeLibDirPath: " + codeLibDirPath);
+
+	// create all necessary files before thirdPartyFiles
 	for (const auto& classId : faustClassIds)
 	{
 		auto _classId = classId.toStdString();
 		DBG("Found Faust classId: " + classId);
-		std::string code = ""; // TODO
-		std::string faustSourcePath = "asdf"; // TODO
+		auto faustSourcePath = codeLibDir.getChildFile(classId + ".dsp").getFullPathName().toStdString();
 
-
-		auto boilerplate_path = scriptnode::faust::faust_base_wrapper::genStaticInstanceBoilerplate(sourceDir.getFullPathName().toStdString(), _classId);
+		auto boilerplate_path = scriptnode::faust::faust_jit_wrapper::genStaticInstanceBoilerplate(boilerplateDestDirPath, _classId);
 		if (boilerplate_path.size() > 0)
 			DBG("Wrote boilerplate file to " + boilerplate_path);
 		else
 			DBG("Writing generated boilerplate failed.");
-		
-		auto code_path = scriptnode::faust::faust_base_wrapper::genStaticInstanceCode(_classId, code, faustSourcePath, srcDir.getFullPathName().toStdString());
+
+		auto code_path = scriptnode::faust::faust_jit_wrapper::genStaticInstanceCode(_classId, faustSourcePath, codeLibDirPath, codeDestDirPath);
 		if (code_path.size() > 0)
 			DBG("Wrote code file to " + code_path);
 		else

@@ -1034,7 +1034,9 @@ void DspNetworkCompileExporter::run()
 	using namespace snex::cppgen;
 
 	ValueTreeBuilder::SampleList externalSamples;
-	
+
+	// set with all files to generate for all networks
+	std::set<String> faustClassIds;
 
 	for (auto e : list)
 	{
@@ -1073,6 +1075,8 @@ void DspNetworkCompileExporter::run()
 
 			auto r = b.createCppCode();
 
+			faustClassIds.insert(r.faustClassIds->begin(), r.faustClassIds->end());
+
 			externalSamples.addArray(b.getExternalSampleList());
 			
 
@@ -1091,6 +1095,34 @@ void DspNetworkCompileExporter::run()
 
 			includedFiles.add(f);
 		}
+	}
+	DBG("sourceDir: " + sourceDir.getFullPathName());
+	auto srcDir = BackendDllManager::getThirdPartyFiles(getMainController(), true).getFirst();
+	DBG("srcDir: " + srcDir.getFullPathName());
+	// we either need to hard code this path and keep it consistent with faust_jit_node or hi_backend will have to depend on hi_faust_jit
+	auto codeLibDir = getFolder(BackendDllManager::FolderSubType::CodeLibrary).getChild("faust");
+	DBG("codeLibDir: " + codeLibDir.getFullPathName());
+
+	// TODO create all necessary files before thirdPartyFiles
+	for (const auto& classId : faustClassIds)
+	{
+		auto _classId = classId.toStdString();
+		DBG("Found Faust classId: " + classId);
+		std::string code = ""; // TODO
+		std::string faustSourcePath = "asdf"; // TODO
+
+
+		auto boilerplate_path = scriptnode::faust::faust_base_wrapper::genStaticInstanceBoilerplate(sourceDir.getFullPathName().toStdString(), _classId);
+		if (boilerplate_path.size() > 0)
+			DBG("Wrote boilerplate file to " + boilerplate_path);
+		else
+			DBG("Writing generated boilerplate failed.");
+		
+		auto code_path = scriptnode::faust::faust_base_wrapper::genStaticInstanceCode(_classId, code, faustSourcePath, srcDir.getFullPathName().toStdString());
+		if (code_path.size() > 0)
+			DBG("Wrote code file to " + code_path);
+		else
+			DBG("Writing generated code failed.");
 	}
 
 	auto thirdPartyFiles = BackendDllManager::getThirdPartyFiles(getMainController(), false);

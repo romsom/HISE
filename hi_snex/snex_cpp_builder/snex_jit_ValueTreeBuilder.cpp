@@ -477,6 +477,7 @@ Node::Ptr ValueTreeBuilder::parseFaustNode(Node::Ptr u)
 		auto faustClass = nodeProperties.getChildWithProperty(PropertyIds::ID, PropertyIds::ClassId.toString())[PropertyIds::Value].toString();
 		auto faustPath = "project::" + faustClass;
 		u = createNode(u->nodeTree, getNodeId(u->nodeTree).getIdentifier(), faustPath);
+		faustClassIds->insert(faustClass);
 		DBG("Exporting faust scriptnode, class: " + faustClass);
 	}
 		

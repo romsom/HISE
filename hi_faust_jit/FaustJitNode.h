@@ -13,7 +13,6 @@ struct faust_jit_node: public scriptnode::WrapperNode
     virtual Identifier getTypeId() const { RETURN_STATIC_IDENTIFIER("faust"); }
 
     faust_jit_node(DspNetwork* n, ValueTree v);
-    void initialise(NodeBase* n);
     virtual void prepare(PrepareSpecs specs) override;
     virtual void reset() override;
     virtual void process(ProcessDataDyn& data) override;
@@ -46,6 +45,7 @@ protected:
     void resetParameters();
 
 private:
+    void initialise(NodeBase* n);
     void loadSource();
     NodePropertyT<String> classId;
     void updateClassId(Identifier, var newValue);

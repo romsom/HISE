@@ -43,7 +43,7 @@ BEGIN_JUCE_MODULE_DECLARATION
   website:          http://hise.audio
   license:          GPL
 
-  dependencies:      hi_dsp_library hi_faust
+  dependencies:     hi_scripting hi_dsp_library hi_faust
 
   linuxLibs: faust_wrap
 

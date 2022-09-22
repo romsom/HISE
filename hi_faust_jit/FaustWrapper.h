@@ -172,19 +172,53 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 		std::string metaDataClass = _classId + "MetaData";
 		std::string faustClassId = prefixClassForFaust(_classId);
 		std::string body =
+			"#pragma once\n"
 			"#include <faust_wrap/dsp/dsp.h>\n"
 			"#include <faust_wrap/gui/UI.h>\n"
 			"#include <faust_wrap/gui/meta.h>\n"
 			"using Meta = faust::Meta;\n"
 			"using UI = faust::UI;\n"
+			"#define FAUST_UIMACROS\n"
+			" // define dummy macros\n"
+			"#define FAUST_ADDCHECKBOX(...)\n"
+			"#define FAUST_ADDNUMENTRY(...)\n"
+			"#define FAUST_ADDBUTTON(...)\n"
+			"#define FAUST_ADDHORIZONTALSLIDER(...)\n"
+			"#define FAUST_ADDVERTICALSLIDER(...)\n"
+			"#define FAUST_ADDVERTICALBARGRAPH(...)\n"
+			"#define FAUST_ADDHORIZONTALBARGRAPH(...)\n"
+			"#define FAUST_ADDSOUNDFILE(...)\n"
 			"#include \"src/" + _classId + ".cpp\"\n"
+			"#if FAUST_INPUTS - FAUST_OUTPUTS\n"
+			"#error Number of inputs and outputs in faust code must match!\n"
+			"#endif\n"
 			"namespace project {\n"
 			"struct " + metaDataClass + " {\n"
 			"		SN_NODE_ID(\"" + _classId + "\");\n"
 			"};\n"
 			"template <int NV>\n"
-			"using " + _classId + " = scriptnode::faust::faust_static_wrapper<1, " + faustClassId + " , " + metaDataClass + ">;\n"
-			"} // namespace project\n";
+			"using " + _classId + " = scriptnode::faust::faust_static_wrapper<1, " + faustClassId + " , " + metaDataClass + ", FAUST_INPUTS>;\n"
+			"} // namespace project\n"
+			" // undef dummy macros"
+			"#undef FAUST_UIMACROS\n"
+			"#undef FAUST_ADDCHECKBOX\n"
+			"#undef FAUST_ADDNUMENTRY\n"
+			"#undef FAUST_ADDBUTTON\n"
+			"#undef FAUST_ADDHORIZONTALSLIDER\n"
+			"#undef FAUST_ADDVERTICALSLIDER\n"
+			"#undef FAUST_ADDVERTICALBARGRAPH\n"
+			"#undef FAUST_ADDHORIZONTALBARGRAPH\n"
+			"#undef FAUST_ADDSOUNDFILE\n"
+			" // undef faust ui macros\n"
+			"#undef FAUST_FILE_NAME\n"
+			"#undef FAUST_CLASS_NAME\n"
+			"#undef FAUST_COMPILATION_OPIONS\n"
+			"#undef FAUST_INPUTS\n"
+			"#undef FAUST_OUTPUTS\n"
+			"#undef FAUST_ACTIVES\n"
+			"#undef FAUST_PASSIVES\n"
+			"#undef FAUST_LIST_ACTIVES\n"
+			"#undef FAUST_LIST_PASSIVES\n";
 
 		auto dir = juce::File(dest_dir);
 		if (!dir.isDirectory())
@@ -217,9 +251,9 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 
 	static std::string genStaticInstanceCode(std::string _classId, std::string srcPath, std::string includePath, std::string dest_dir) {
 		std::string dest_file = _classId + ".cpp";
-		int argc = 14;
+		int argc = 15;
 		std::string faustClassId = prefixClassForFaust(_classId);
-		const char* argv[] = {"-nvi", "-rui", "-I", includePath.c_str(), "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str(), nullptr};
+		const char* argv[] = {"-uim", "-nvi", "-rui", "-I", includePath.c_str(), "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str(), nullptr};
 		if (genAuxFile(srcPath, argc, argv)) {
 			DBG("hi_faust_jit: Static code generation successful: " + dest_file);
 			return dest_file;

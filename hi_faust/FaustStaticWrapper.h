@@ -4,7 +4,7 @@
 namespace scriptnode {
 namespace faust{
 
-template <int NV, class FaustClass, class MC> struct faust_static_wrapper: public data::base, public faust_base_wrapper
+template <int NV, class FaustClass, class MC, int nChannels> struct faust_static_wrapper: public data::base, public faust_base_wrapper
 {
 	// Metadata Definitions ------------------------------------------------------
 	
@@ -80,6 +80,11 @@ template <int NV, class FaustClass, class MC> struct faust_static_wrapper: publi
 			pd.info.index = i++;
 			data.add(std::move(pd));
 		}
+	}
+
+	// provide compile-time constant number of channels (e.g., to HardcodedMasterFX)
+	static constexpr int getFixChannelAmount() {
+		return nChannels;
 	}
 };
 }

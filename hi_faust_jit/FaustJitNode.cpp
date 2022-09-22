@@ -189,9 +189,6 @@ void faust_jit_node::loadSource()
         auto p = dynamic_cast<Processor*>(getScriptProcessor());
 
         debugError(p, "FaustError");
-    } else {
-	    faust->genStaticInstanceCode(getFaustRootFile().getFullPathName().toStdString());
-	    faust->genStaticInstanceBody(getFaustRootFile().getChildFile("tmp").getFullPathName().toStdString());
     }
     setupParameters();
 }

@@ -159,15 +159,18 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         }
     }
 
-	std::string classIdForFaustCode() {
-		return "_" + classId.toStdString();
+	static std::string prefixClassForFaust(std::string _classId) {
+		return "_" + _classId;
 	}
 
-	std::string genStaticInstanceBody(std::string dest_dir) {
-		std::string _classId = classId.toStdString();
+	std::string classIdForFaustClass() {
+		return prefixClassForFaust(classId.toStdString());
+	}
+
+	static std::string genStaticInstanceBoilerplate(std::string dest_dir, std::string _classId) {
 		std::string dest_file = _classId + ".cpp";
 		std::string metaDataClass = _classId + "MetaData";
-		std::string faustClassId = classIdForFaustCode();
+		std::string faustClassId = prefixClassForFaust(_classId);
 		std::string body =
 			"using Meta = faust::Meta;\n"
 			"using UI = faust::UI;\n"
@@ -192,11 +195,11 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 		return dest_file;
 	}
 
-	bool genAuxFile(int argc, const char* argv[]) {
+	static bool genAuxFile(std::string _classId, std::string code, int argc, const char* argv[]) {
 		std::string aux_content = "none";
 		std::string error_msg;
 
-		if (!::faust::generateAuxFilesFromString(classIdForFaustCode(), code, argc, argv, error_msg)) {
+		if (!::faust::generateAuxFilesFromString(prefixClassForFaust(_classId), code, argc, argv, error_msg)) {
 			// TODO replace DBG with appropriate error logging function
 			DBG("hi_faust_jit: Aux file generation failed:");
 			DBG("argv: ");
@@ -209,11 +212,12 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 		return true;
 	}
 
-	std::string genStaticInstanceCode(std::string dest_dir) {
-		std::string dest_file = classId.toStdString() + ".cpp";
+	static std::string genStaticInstanceCode(std::string _classId, std::string code, std::string includePath, std::string dest_dir) {
+		std::string dest_file = _classId + ".cpp";
 		int argc = 13;
-		const char* argv[] = {"-rui", "-I", projectDir.toRawUTF8(), "-lang", "cpp", "-scn", "faust::dsp", "-cn", classIdForFaustCode().c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str(), nullptr};
-		if (genAuxFile(argc, argv)) {
+		std::string faustClassId = prefixClassForFaust(_classId);
+		const char* argv[] = {"-rui", "-I", includePath.c_str(), "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str(), nullptr};
+		if (genAuxFile(_classId, code, argc, argv)) {
 			DBG("hi_faust_jit: Static code generation successful: " + dest_file);
 			return dest_file;
 		}

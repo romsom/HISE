@@ -45,8 +45,6 @@ BEGIN_JUCE_MODULE_DECLARATION
 
   dependencies:      hi_dsp_library
 
-  linuxLibs: faust_wrap
-
 END_JUCE_MODULE_DECLARATION
 
 ******************************************************************************/
@@ -63,12 +61,11 @@ Enables the Faust Compiler
 
 
 #if HISE_INCLUDE_FAUST
+#include "JuceHeader.h"
 #include <optional>
 // TODO replace with hi_dsp_library
-#include "../hi_scripting/hi_scripting.h" // DspNetwork, NodeBase, WrapperNode
 #include <faust_wrap/dsp/dsp.h>
 #include <faust_wrap/gui/UI.h>
-#include <faust_wrap/dsp/libfaust.h>
 #include "FaustUI.h"
 #include "FaustWrapper.h"
 #include "FaustStaticWrapper.h"

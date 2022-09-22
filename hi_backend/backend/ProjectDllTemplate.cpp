@@ -86,6 +86,7 @@ static const unsigned char projectDllTemplate_jucer_lines[] =
 "  <MODULES>\r\n"
 "    <MODULE id=\"hi_dsp_library\" showAllCode=\"1\" useLocalCopy=\"0\" useGlobalPath=\"0\"/>\r\n"
 "    <MODULE id=\"hi_tools\" showAllCode=\"1\" useLocalCopy=\"0\" useGlobalPath=\"0\"/>\r\n"
+"    <MODULE id=\"hi_faust\" showAllCode=\"1\" useLocalCopy=\"0\" useGlobalPath=\"0\"/>\r\n"
 "    <MODULE id=\"juce_audio_basics\" showAllCode=\"1\" useLocalCopy=\"0\" useGlobalPath=\"0\"/>\r\n"
 "    <MODULE id=\"juce_audio_formats\" showAllCode=\"1\" useLocalCopy=\"0\" useGlobalPath=\"0\"/>\r\n"
 "    <MODULE id=\"juce_core\" showAllCode=\"1\" useLocalCopy=\"0\" useGlobalPath=\"0\"/>\r\n"

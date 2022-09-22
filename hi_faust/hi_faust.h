@@ -68,6 +68,7 @@ Enables the Faust Compiler
 #include "../hi_scripting/hi_scripting.h" // DspNetwork, NodeBase, WrapperNode
 #include <faust_wrap/dsp/dsp.h>
 #include <faust_wrap/gui/UI.h>
+#include <faust_wrap/dsp/libfaust.h>
 #include "FaustUI.h"
 #include "FaustWrapper.h"
 #include "FaustStaticWrapper.h"

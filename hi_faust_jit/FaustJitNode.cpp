@@ -1,8 +1,6 @@
 #define FAUSTFLOAT float
 
 #include <faust_wrap/dsp/llvm-dsp.h>
-#include <faust_wrap/dsp/libfaust.h>
-#include <faust_wrap/gui/UI.h>
 #include "FaustWrapper.h"
 #include "FaustMenuBar.h"
 

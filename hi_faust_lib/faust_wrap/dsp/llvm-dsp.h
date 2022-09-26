@@ -34,12 +34,6 @@ architecture section is not modified.
 #include <string>
 #include <vector>
 
-#include "faust_wrap/dsp/dsp.h"
-// #include "faust/dsp/libfaust-signal.h"
-// #include "faust/dsp/libfaust-box.h"
-// #include "faust/gui/meta.h"
-#include "faust_wrap/export.h"
-
 /*!
  \addtogroup llvmcpp C++ interface for compiling Faust code with the LLVM backend.
  Note that the API is not thread safe: use 'startMTDSPFactories/stopMTDSPFactories' to use it in a multi-thread context.

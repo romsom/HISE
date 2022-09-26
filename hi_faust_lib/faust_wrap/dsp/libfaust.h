@@ -25,8 +25,6 @@
 #include <string>
 #include <string.h>
 
-#include "faust/export.h"
-
 namespace faust {
 /*!
  \addtogroup libfaustcpp C++ interface for the tools API.

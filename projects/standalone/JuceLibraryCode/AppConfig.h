@@ -295,6 +295,10 @@
  #define   HISE_INCLUDE_FAUST_JIT 1
 #endif
 
+#ifndef    HISE_FAUST_USE_INTERPRETER
+ #define   HISE_FAUST_USE_INTERPRETER 0
+#endif
+
 //==============================================================================
 // hi_lac flags:
 

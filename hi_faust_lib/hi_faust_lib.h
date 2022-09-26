@@ -56,4 +56,5 @@ END_JUCE_MODULE_DECLARATION
 
 #include "../hi_faust_types/hi_faust_types.h"
 #include "faust_wrap/dsp/llvm-dsp.h"
+#include "faust_wrap/dsp/interpreter-dsp.h"
 #include "faust_wrap/dsp/libfaust.h"

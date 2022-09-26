@@ -1,3 +1,4 @@
+
 /*  ===========================================================================
 *
 *   This file is part of HISE.
@@ -35,38 +36,22 @@
 
 BEGIN_JUCE_MODULE_DECLARATION
 
-  ID:               hi_faust
+  ID:               hi_faust_lib
   vendor:           Hart Instruments
   version:          0.0.1
-  name:             HISE Faust Integration
+  name:             HISE Faust library wrapper
   description:      All processors for HISE
   website:          http://hise.audio
   license:          GPL
 
-  dependencies:      hi_dsp_library hi_faust_types
+  dependencies: hi_faust_types
+
+  linuxLibs: faust
 
 END_JUCE_MODULE_DECLARATION
 
 ******************************************************************************/
-#ifndef HI_FAUST_INCLUDED
-#define HI_FAUST_INCLUDED
 
-/** Config: HISE_INCLUDE_FAUST
-
-Enables the Faust Compiler
-*/
-#ifndef HISE_INCLUDE_FAUST
-#define HISE_INCLUDE_FAUST 1
-#endif // HISE_INCLUDE_FAUST
-
-
-#if HISE_INCLUDE_FAUST
-#include "JuceHeader.h"
-#include <optional>
 #include "../hi_faust_types/hi_faust_types.h"
-#include "FaustUI.h"
-#include "FaustWrapper.h"
-#include "FaustStaticWrapper.h"
-#endif // HISE_INCLUDE_FAUST
-
-#endif // HI_FAUST_INCLUDED
+#include "faust_wrap/dsp/llvm-dsp.h"
+#include "faust_wrap/dsp/libfaust.h"

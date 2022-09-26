@@ -94,6 +94,8 @@
         <MODULEPATH id="hi_rlottie" path="../../"/>
         <MODULEPATH id="hi_faust" path="../../"/>
         <MODULEPATH id="hi_faust_jit" path="../../../HISE"/>
+        <MODULEPATH id="hi_faust_types" path="../../../HISE"/>
+        <MODULEPATH id="hi_faust_lib" path="../../../HISE"/>
       </MODULEPATHS>
     </XCODE_MAC>
     <XCODE_IPHONE targetFolder="Builds/iOS" iosScreenOrientation="UIInterfaceOrientationLandscapeLeft,UIInterfaceOrientationLandscapeRight"
@@ -143,6 +145,8 @@
         <MODULEPATH id="hi_rlottie" path="../../"/>
         <MODULEPATH id="hi_faust" path="../../"/>
         <MODULEPATH id="hi_faust_jit" path="../../../HISE"/>
+        <MODULEPATH id="hi_faust_types" path="../../../HISE"/>
+        <MODULEPATH id="hi_faust_lib" path="../../../HISE"/>
       </MODULEPATHS>
     </XCODE_IPHONE>
     <VS2017 targetFolder="Builds/VisualStudio2017" smallIcon="ho3qQy" bigIcon="ho3qQy"
@@ -195,12 +199,13 @@
         <MODULEPATH id="hi_rlottie" path="../../"/>
         <MODULEPATH id="hi_faust" path="../../"/>
         <MODULEPATH id="hi_faust_jit" path="../../../HISE"/>
+        <MODULEPATH id="hi_faust_types" path="../../../HISE"/>
+        <MODULEPATH id="hi_faust_lib" path="../../../HISE"/>
       </MODULEPATHS>
     </VS2017>
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraDefs="USE_IPP=0&#10;HI_ENABLE_EXPANSION_EDITING=1&#10;HISE_ENABLE_EXPANSIONS=1&#10;HISE_SCRIPT_SERVER_TIMEOUT=20000&#10;"
                 smallIcon="bfBEgJ" bigIcon="bfBEgJ" linuxExtraPkgConfig="x11 xinerama xext"
-                extraLinkerFlags="-no-pie&#10;-L/home/etxzat/Repo/GSoC/faust_wrap/build"
-                extraCompilerFlags="-fpermissive">
+                extraLinkerFlags="-no-pie" extraCompilerFlags="-fpermissive">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="HISE Standalone"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="HISE Standalone"
@@ -240,6 +245,8 @@
         <MODULEPATH id="hi_rlottie" path="../../"/>
         <MODULEPATH id="hi_faust" path="../../"/>
         <MODULEPATH id="hi_faust_jit" path="../../../HISE"/>
+        <MODULEPATH id="hi_faust_types" path="../../../HISE"/>
+        <MODULEPATH id="hi_faust_lib" path="../../../HISE"/>
       </MODULEPATHS>
     </LINUX_MAKE>
   </EXPORTFORMATS>
@@ -251,6 +258,8 @@
     <MODULE id="hi_dsp_library" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="hi_faust" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="hi_faust_jit" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="hi_faust_lib" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="hi_faust_types" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="hi_lac" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="hi_modules" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="hi_rlottie" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>

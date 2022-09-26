@@ -43,9 +43,8 @@ BEGIN_JUCE_MODULE_DECLARATION
   website:          http://hise.audio
   license:          GPL
 
-  dependencies:     hi_scripting hi_dsp_library hi_faust
+  dependencies:     hi_scripting hi_dsp_library hi_faust hi_faust_lib
 
-  linuxLibs: faust_wrap
 
 END_JUCE_MODULE_DECLARATION
 
@@ -65,11 +64,10 @@ Enables the Faust JIT Compiler
 #if HISE_INCLUDE_FAUST_JIT
 #include <optional>
 #include "../hi_faust/hi_faust.h"
+#include "../hi_faust_lib/hi_faust_lib.h"
 #include "../hi_scripting/hi_scripting.h" // DspNetwork, NodeBase, WrapperNode
 #include "../hi_core/hi_core.h" // FileHandlerBase
 #include "FaustJitNode.h"
-#include <faust_wrap/dsp/libfaust.h>
-#include <faust_wrap/dsp/llvm-dsp.h>
 #include "FaustWrapper.h"
 #endif // HISE_INCLUDE_FAUST_JIT
 

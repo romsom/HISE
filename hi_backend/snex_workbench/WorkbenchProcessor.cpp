@@ -1096,6 +1096,8 @@ void DspNetworkCompileExporter::run()
 			includedFiles.add(f);
 		}
 	}
+
+#if HISE_USE_FAUST_JIT
 	DBG("sourceDir: " + sourceDir.getFullPathName());
 	auto codeDestDir = getFolder(BackendDllManager::FolderSubType::ThirdParty).getChildFile("src");
 	auto codeDestDirPath = codeDestDir.getFullPathName().toStdString();
@@ -1129,6 +1131,8 @@ void DspNetworkCompileExporter::run()
 		else
 			DBG("Writing generated code failed.");
 	}
+
+#endif // HISE_USE_FAUST_JIT
 
 	auto thirdPartyFiles = BackendDllManager::getThirdPartyFiles(getMainController(), false);
 

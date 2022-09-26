@@ -197,7 +197,7 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 			"template <int NV>\n"
 			"using " + _classId + " = scriptnode::faust::faust_static_wrapper<1, " + faustClassId + " , " + metaDataClass + ", FAUST_INPUTS>;\n"
 			"} // namespace project\n"
-			" // undef dummy macros"
+			" // undef dummy macros\n"
 			"#undef FAUST_UIMACROS\n"
 			"#undef FAUST_ADDCHECKBOX\n"
 			"#undef FAUST_ADDNUMENTRY\n"

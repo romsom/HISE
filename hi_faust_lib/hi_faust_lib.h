@@ -47,6 +47,8 @@ BEGIN_JUCE_MODULE_DECLARATION
   dependencies: hi_faust_types
 
   linuxLibs: faust
+  windowsLibs: faust
+  OSXLibs: faust
 
 END_JUCE_MODULE_DECLARATION
 

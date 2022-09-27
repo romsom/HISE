@@ -71,6 +71,8 @@ struct FaustMenuBar : public Component,
     enum MenuOption {
         MENU_OPTION_FIRST = 1,
         NEW_FILE = MENU_OPTION_FIRST,
+        IMPORT_FILE,
+        IMPORT_LIB,
         // add more options here
         MENU_OPTION_LAST,
         MENU_OPTION_INVALID,
@@ -78,6 +80,8 @@ struct FaustMenuBar : public Component,
 
     std::map<int, String> menuOptions = {
         {NEW_FILE, "Create new file"},
+        {IMPORT_FILE, "Import file into project"},
+        {IMPORT_LIB, "Import library into project"},
             // add description for more options here
         {MENU_OPTION_INVALID, "Invalid Option (BUG)"}
     };
@@ -99,12 +103,48 @@ struct FaustMenuBar : public Component,
         }
     }
 
+	void importFile(String extension) {
+		auto chooser = juce::FileChooser("Faust file to import into the project",
+		                                 node->getFaustRootFile(), "*." + extension);
+		if (!chooser.browseForFileToOpen())
+			return;
+
+		File sourceFile = chooser.getResult();
+
+		if (!sourceFile.existsAsFile())
+			return;
+
+		File destFile = node->getFaustRootFile().getChildFile(sourceFile.getFileNameWithoutExtension() + "." + extension);
+
+		if (destFile.exists()) {
+			auto destChooser = juce::FileChooser("File with the same name already exists, select a destination file",
+			                                     destFile, "*." + extension);
+			if (!destChooser.browseForFileToSave(true))
+				return;
+			destFile = destChooser.getResult();
+		}
+
+		DBG("Copying: \"" + sourceFile.getFullPathName() + "\" -> \"" + destFile.getFullPathName() + "\"");
+		if (!sourceFile.copyFileTo(destFile))
+			return;
+
+		// If it's a faust source file, load it
+		if (extension == "dsp")
+			node->setClass(destFile.getFileNameWithoutExtension());
+	}
+
     void executeMenuAction(int option)
     {
         switch(option) {
         case NEW_FILE:
             createNewFile();
             break;
+        case IMPORT_FILE:
+	        importFile("dsp");
+	        break;
+        case IMPORT_LIB:
+	        importFile("lib");
+	        break;
 
             // add code for more functions here
         default:

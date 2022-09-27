@@ -30,6 +30,8 @@ struct faust_jit_node: public scriptnode::WrapperNode
     virtual String getClassId();
     virtual StringArray getAvailableClassIds();
     virtual void setClass(const String& newClassId);
+	virtual void createSourceAndSetClass(const String newClassId);
+	virtual void reinitFaustWrapper();
 
     // Parameter methods
     void parameterUpdated(ValueTree child, bool wasAdded);

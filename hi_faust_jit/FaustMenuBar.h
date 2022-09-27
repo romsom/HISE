@@ -14,6 +14,7 @@ struct FaustMenuBar : public Component,
     FaustMenuBar(faust_jit_node *n) :
         addButton("add", this, factory),
         editButton("edit", this, factory),
+        reloadButton("reset", this, factory),
         node(n)
     {
         // we must provide a valid faust_jit_node pointer
@@ -29,6 +30,7 @@ struct FaustMenuBar : public Component,
         editButton.setTooltip("Edit the current Faust source file in external editor");
         addAndMakeVisible(addButton);
         addAndMakeVisible(editButton);
+        addAndMakeVisible(reloadButton);
         // gather existing source files
         rebuildComboBoxItems();
     }
@@ -60,6 +62,7 @@ struct FaustMenuBar : public Component,
     juce::ComboBox classSelector;
     HiseShapeButton addButton;
     HiseShapeButton editButton;
+    HiseShapeButton reloadButton;
 
     WeakReference<faust_jit_node> node;
     hise::ScriptnodeComboBoxLookAndFeel claf;
@@ -90,7 +93,7 @@ struct FaustMenuBar : public Component,
 
         if (name.isNotEmpty())
         {
-            node->setClass(name);
+            node->createSourceAndSetClass(name);
             rebuildComboBoxItems();
             //refreshButtonState();
         }
@@ -131,6 +134,7 @@ struct FaustMenuBar : public Component,
         classSelector.setBounds(b.removeFromLeft(100));
         b.removeFromLeft(3);
         editButton.setBounds(b.removeFromRight(h).reduced(2));
+        reloadButton.setBounds(b.removeFromRight(h + editButton.getWidth() / 2).reduced(2));
 
         b.removeFromLeft(10);
     }
@@ -158,6 +162,9 @@ struct FaustMenuBar : public Component,
 	        } else {
 		        DBG("File not found: " + sourceFilePath);
 	        }
+        } else if (b == &reloadButton) {
+	        DBG("Reload button pressed");
+	        node->reinitFaustWrapper();
         }
     }
 

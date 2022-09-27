@@ -159,17 +159,38 @@ String faust_jit_node::getClassId()
 void faust_jit_node::loadSource()
 {
     auto newClassId = getClassId();
-    if (faust->getClassId() == newClassId) return;
+    if (faust->getClassId() != newClassId)
+	    reinitFaustWrapper();
+}
 
-    resetParameters();
-    File sourceFile = getFaustFile(newClassId);
-
+void faust_jit_node::createSourceAndSetClass(const String newClassId)
+{
+	File sourceFile = getFaustFile(newClassId);
     // Create new file if necessary
     if (!sourceFile.existsAsFile()) {
         auto res = sourceFile.create();
         if (res.failed()) {
             std::cerr << "Failed creating file \"" + sourceFile.getFullPathName() + "\"" << std::endl;
+            return;
         }
+        sourceFile.appendText("// Faust Source File: " + newClassId + "\n"
+                              "// Created with HISE on " + juce::Time::getCurrentTime().formatted("%Y-%m-%d") + "\n"
+                              "import(\"stdfaust.lib\");\n"
+                              "process = _, _;\n");
+    }
+    setClass(newClassId);
+}
+
+void faust_jit_node::reinitFaustWrapper()
+{
+	auto newClassId = getClassId();
+    resetParameters();
+    File sourceFile = getFaustFile(newClassId);
+
+    // Do nothing if file doesn't exist:
+    if (!sourceFile.existsAsFile()) {
+	    DBG("Could not load Faust source file (" + sourceFile.getFullPathName() + "): File not found.");
+	    return;
     }
 
     DBG("Faust DSP file to load:" << sourceFile.getFullPathName());

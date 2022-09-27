@@ -14,11 +14,11 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 
     faust_jit_wrapper(String classId, String projectDir):
 	    faust_base_wrapper(nullptr),
-#if HISE_FAUST_USE_INTERPRETER
+#if !HISE_FAUST_USE_LLVM_JIT
 	    interpreterFactory(nullptr),
-#else // !HISE_FAUST_USE_INTERPRETER
+#else // HISE_FAUST_USE_LLVM_JIT
         jitFactory(nullptr),
-#endif // HISE_FAUST_USE_INTERPRETER
+#endif // !HISE_FAUST_USE_LLVM_JIT
         classId(classId),
         projectDir(projectDir)
     { }
@@ -27,23 +27,23 @@ struct faust_jit_wrapper : public faust_base_wrapper {
     {
         if(faustDsp)
             delete faustDsp;
-#if HISE_FAUST_USE_INTERPRETER
+#if !HISE_FAUST_USE_LLVM_JIT
         if (interpreterFactory)
             ::faust::deleteInterpreterDSPFactory(interpreterFactory);
-#else // !HISE_FAUST_USE_INTERPRETER
+#else // HISE_FAUST_USE_LLVM_JIT
         if (jitFactory)
             ::faust::deleteDSPFactory(jitFactory);
-#endif // HISE_FAUST_USE_INTERPRETER
+#endif // !HISE_FAUST_USE_LLVM_JIT
     }
 
     std::string code;
     std::string errorMessage;
     int jitOptimize = 0; // -1 is maximum optimization
-#if HISE_FAUST_USE_INTERPRETER
+#if !HISE_FAUST_USE_LLVM_JIT
     ::faust::interpreter_dsp_factory* interpreterFactory;
-#else // !HISE_FAUST_USE_INTERPRETER
+#else // HISE_FAUST_USE_LLVM_JIT
     ::faust::llvm_dsp_factory* jitFactory;
-#endif // HISE_FAUST_USE_INTERPRETER
+#endif // !HISE_FAUST_USE_LLVM_JIT
     String projectDir;
 
     // Mutex for synchronization of compilation and processing
@@ -64,24 +64,24 @@ struct faust_jit_wrapper : public faust_base_wrapper {
             delete faustDsp;
             faustDsp = nullptr;
         }
-#if HISE_FAUST_USE_INTERPRETER
+#if !HISE_FAUST_USE_LLVM_JIT
         if (interpreterFactory != nullptr) {
             ::faust::deleteInterpreterDSPFactory(interpreterFactory);
             // no need to set interpreterFactory=nullptr, as it will be overwritten in the next step
         }
-#else // !HISE_FAUST_USE_INTERPRETER
+#else // HISE_FAUST_USE_LLVM_JIT
         if (jitFactory != nullptr) {
             ::faust::deleteDSPFactory(jitFactory);
             // no need to set jitFactory=nullptr, as it will be overwritten in the next step
         }
-#endif // HISE_FAUST_USE_INTERPRETER
+#endif // !HISE_FAUST_USE_LLVM_JIT
 
         ui.reset();
 
         int llvm_argc = 3;
         const char* llvm_argv[] = {"-rui", "-I", projectDir.toRawUTF8(), nullptr};
 
-#if HISE_FAUST_USE_INTERPRETER
+#if !HISE_FAUST_USE_LLVM_JIT
         interpreterFactory = ::faust::createInterpreterDSPFactoryFromString("faust", code, llvm_argc,
 	      llvm_argv, errorMessage);
         if (interpreterFactory == nullptr) {
@@ -92,7 +92,7 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         }
         std::cout << "Faust interpreter instantiation successful" << std::endl;
         faustDsp = interpreterFactory->createDSPInstance();
-#else // !HISE_FAUST_USE_INTERPRETER
+#else // HISE_FAUST_USE_LLVM_JIT
         jitFactory = ::faust::createDSPFactoryFromString("faust", code, llvm_argc, llvm_argv, "",
                                                          errorMessage, jitOptimize);
         if (jitFactory == nullptr) {
@@ -103,7 +103,7 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         }
         std::cout << "Faust jit compilation successful" << std::endl;
         faustDsp = jitFactory->createDSPInstance();
-#endif // HISE_FAUST_USE_INTERPRETER
+#endif // !HISE_FAUST_USE_LLVM_JIT
         if (faustDsp == nullptr) {
             std::cout << "Faust DSP instantiation" << std::endl;
             return false;

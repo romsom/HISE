@@ -295,8 +295,11 @@
  #define   HISE_INCLUDE_FAUST_JIT 1
 #endif
 
-#ifndef    HISE_FAUST_USE_INTERPRETER
- #define   HISE_FAUST_USE_INTERPRETER 0
+//==============================================================================
+// hi_faust_lib flags:
+
+#ifndef    HISE_FAUST_USE_LLVM_JIT
+ #define   HISE_FAUST_USE_LLVM_JIT 1
 #endif
 
 //==============================================================================

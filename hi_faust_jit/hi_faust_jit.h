@@ -60,13 +60,6 @@ Enables the Faust JIT Compiler
 #define HISE_INCLUDE_FAUST_JIT 1
 #endif // HISE_INCLUDE_FAUST_JIT
 
-/** Config: HISE_FAUST_USE_INTERPRETER
-
-Use the Faust interpreter instead of the LLVM JIT
-*/
-#ifndef HISE_FAUST_USE_INTERPRETER
-#define HISE_FAUST_USE_INTERPRETER 1
-#endif // HISE_FAUST_USE_INTERPRETER
 
 #if HISE_INCLUDE_FAUST_JIT
 #include <optional>

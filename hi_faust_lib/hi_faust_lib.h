@@ -54,7 +54,17 @@ END_JUCE_MODULE_DECLARATION
 
 ******************************************************************************/
 
+/** Config: HISE_FAUST_USE_LLVM_JIT
+
+Use the Faust interpreter instead of the LLVM JIT
+*/
+#ifndef HISE_FAUST_USE_LLVM_JIT
+#define HISE_FAUST_USE_LLVM_JIT 1
+#endif // HISE_FAUST_USE_LLVM_JIT
+
 #include "../hi_faust_types/hi_faust_types.h"
+#if HISE_FAUST_USE_LLVM_JIT
 #include "faust_wrap/dsp/llvm-dsp.h"
+#endif
 #include "faust_wrap/dsp/interpreter-dsp.h"
 #include "faust_wrap/dsp/libfaust.h"

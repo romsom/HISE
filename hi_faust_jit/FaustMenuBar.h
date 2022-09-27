@@ -13,7 +13,7 @@ struct FaustMenuBar : public Component,
 
     FaustMenuBar(faust_jit_node *n) :
         addButton("add", this, factory),
-        editButton("faust", this, factory),
+        editButton("edit", this, factory),
         node(n)
     {
         // we must provide a valid faust_jit_node pointer
@@ -26,6 +26,7 @@ struct FaustMenuBar : public Component,
         classSelector.setLookAndFeel(&claf);
         classSelector.addListener(this);
 
+        editButton.setTooltip("Edit the current Faust source file in external editor");
         addAndMakeVisible(addButton);
         addAndMakeVisible(editButton);
         // gather existing source files
@@ -129,7 +130,7 @@ struct FaustMenuBar : public Component,
         addButton.setBounds(b.removeFromLeft(h-4));
         classSelector.setBounds(b.removeFromLeft(100));
         b.removeFromLeft(3);
-        editButton.setBounds(getLocalBounds().removeFromRight(80).reduced(2));
+        editButton.setBounds(b.removeFromRight(h).reduced(2));
 
         b.removeFromLeft(10);
     }
@@ -147,6 +148,16 @@ struct FaustMenuBar : public Component,
             int menu_selection = (MenuOption)m.show();
             if (menu_selection > 0)
                 executeMenuAction(menu_selection);
+        } else if (b == &editButton) {
+	        DBG("Edit button pressed");
+	        auto sourceFile = node->getFaustFile(node->getClassId());
+	        auto sourceFilePath = sourceFile.getFullPathName();
+	        if (sourceFile.existsAsFile()) {
+		        juce::Process::openDocument(sourceFilePath, "");
+		        DBG("Opened file: " + sourceFilePath);
+	        } else {
+		        DBG("File not found: " + sourceFilePath);
+	        }
         }
     }
 

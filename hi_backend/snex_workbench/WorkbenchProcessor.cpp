@@ -1126,6 +1126,16 @@ void DspNetworkCompileExporter::run()
 			DBG("Writing generated boilerplate failed.");
 
 		std::vector<std::string> faustLibraryPaths = {codeLibDirPath};
+		// lookup FaustPath from settings
+		auto& settings = dynamic_cast<GlobalSettingManager*>(getMainController())->getSettingsObject();
+		juce::String faustPath = settings.getSetting(hise::HiseSettings::Compiler::FaustPath);
+		if (faustPath.length() > 0) {
+			auto globalFaustLibraryPath = juce::File(faustPath).getChildFile("share").getChildFile("faust");
+			if (globalFaustLibraryPath.isDirectory()) {
+				faustLibraryPaths.push_back(globalFaustLibraryPath.getFullPathName().toStdString());
+			}
+		}
+
 		auto code_path = scriptnode::faust::faust_jit_wrapper::genStaticInstanceCode(_classId, faustSourcePath, faustLibraryPaths, codeDestDirPath);
 		if (code_path.size() > 0)
 			DBG("Wrote code file to " + code_path);

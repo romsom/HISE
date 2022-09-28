@@ -136,10 +136,12 @@ File faust_jit_node::getFaustFile(String basename)
 std::vector<std::string> faust_jit_node::getFaustLibraryPaths()
 {
 	std::vector<std::string> paths;
-	const auto& data = dynamic_cast<GlobalSettingManager*>(this->getScriptProcessor()->getMainController_())->getSettingsObject();
 	paths.push_back(getFaustRootFile().getFullPathName().toStdString());
-	auto faustPath = data.getSetting(hise::HiseSettings::Compiler::FaustPath);
-	if (faustPath.size() > 0) {
+	const auto& data = dynamic_cast<GlobalSettingManager*>(this->getScriptProcessor()->getMainController_())->getSettingsObject();
+
+	juce::String faustPath = data.getSetting(hise::HiseSettings::Compiler::FaustPath);
+	if (faustPath.length() > 0) {
+		DBG("Global Faust Path: " + faustPath);
 		auto globalFaustLibraryPath = juce::File(faustPath).getChildFile("share").getChildFile("faust");
 		if (globalFaustLibraryPath.isDirectory()) {
 			paths.push_back(globalFaustLibraryPath.getFullPathName().toStdString());

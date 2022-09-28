@@ -24,6 +24,7 @@ struct faust_jit_node: public scriptnode::WrapperNode
     }
     File getFaustRootFile();
     File getFaustFile(String basename);
+	std::vector<std::string> getFaustLibraryPaths();
 
     // pure virtual to set/get the class in faust_jit_node and
     // only get in faust_node<T>, here because of UI code

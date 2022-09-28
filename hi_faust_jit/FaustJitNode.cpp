@@ -11,7 +11,7 @@ namespace faust {
 faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
 	WrapperNode(n, v),
     classId(PropertyIds::ClassId, ""),
-    faust(new faust_jit_wrapper("faust", getFaustRootFile().getFullPathName()))
+    faust(new faust_jit_wrapper("faust"))
 {
     extraComponentFunction = [](void* o, PooledUIUpdater* u)
     {
@@ -133,6 +133,22 @@ File faust_jit_node::getFaustFile(String basename)
     return nodeRoot.getChildFile(basename + ".dsp");
 }
 
+std::vector<std::string> faust_jit_node::getFaustLibraryPaths()
+{
+	std::vector<std::string> paths;
+	const auto& data = dynamic_cast<GlobalSettingManager*>(this->getScriptProcessor()->getMainController_())->getSettingsObject();
+	paths.push_back(getFaustRootFile().getFullPathName().toStdString());
+	auto faustPath = data.getSetting(hise::HiseSettings::Compiler::FaustPath);
+	if (faustPath.size() > 0) {
+		auto globalFaustLibraryPath = juce::File(faustPath).getChildFile("share").getChildFile("faust");
+		if (globalFaustLibraryPath.isDirectory()) {
+			paths.push_back(globalFaustLibraryPath.getFullPathName().toStdString());
+		}
+	}
+	
+	return paths;
+}
+
 
 void faust_jit_node::addNewParameter(parameter::data p)
 {
@@ -199,7 +215,7 @@ void faust_jit_node::reinitFaustWrapper()
     String code = sourceFile.loadFileAsString();
     faust->setCode(newClassId, code.toStdString());
     // setup dsp
-    bool success = faust->setup();
+    bool success = faust->setup(getFaustLibraryPaths());
     std::cout << "Faust initialization: " << (success ? "success" : "failed") << std::endl;
     // TODO: error handling
     if (!success)

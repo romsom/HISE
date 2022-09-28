@@ -1125,7 +1125,8 @@ void DspNetworkCompileExporter::run()
 		else
 			DBG("Writing generated boilerplate failed.");
 
-		auto code_path = scriptnode::faust::faust_jit_wrapper::genStaticInstanceCode(_classId, faustSourcePath, codeLibDirPath, codeDestDirPath);
+		std::vector<std::string> faustLibraryPaths = {codeLibDirPath};
+		auto code_path = scriptnode::faust::faust_jit_wrapper::genStaticInstanceCode(_classId, faustSourcePath, faustLibraryPaths, codeDestDirPath);
 		if (code_path.size() > 0)
 			DBG("Wrote code file to " + code_path);
 		else

@@ -1,3 +1,4 @@
+#include "hi_core/hi_core/HiseSettings.h"
 #include <atomic>
 #include <chrono>
 #include <thread>
@@ -9,18 +10,18 @@ using namespace std::chrono_literals;
 namespace scriptnode {
 namespace faust {
 
+class faust_jit_node;
 // wrapper struct for faust types to avoid name-clash
 struct faust_jit_wrapper : public faust_base_wrapper {
 
-    faust_jit_wrapper(String classId, String projectDir):
+	faust_jit_wrapper(String classId):
 	    faust_base_wrapper(nullptr),
 #if !HISE_FAUST_USE_LLVM_JIT
 	    interpreterFactory(nullptr),
 #else // HISE_FAUST_USE_LLVM_JIT
         jitFactory(nullptr),
 #endif // !HISE_FAUST_USE_LLVM_JIT
-        classId(classId),
-        projectDir(projectDir)
+        classId(classId)
     { }
 
     ~faust_jit_wrapper()
@@ -44,12 +45,11 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 #else // HISE_FAUST_USE_LLVM_JIT
     ::faust::llvm_dsp_factory* jitFactory;
 #endif // !HISE_FAUST_USE_LLVM_JIT
-    String projectDir;
 
     // Mutex for synchronization of compilation and processing
     juce::CriticalSection jitLock;
 
-    bool setup() {
+	bool setup(std::vector<std::string> faustLibraryPaths) {
         juce::ScopedLock sl(jitLock);
         // because the audio thread is real-time, we can wait for the duration of one
         // frame and be sure we don't modify any data the audio thread still uses
@@ -78,12 +78,17 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 
         ui.reset();
 
-        int llvm_argc = 3;
-        const char* llvm_argv[] = {"-rui", "-I", projectDir.toRawUTF8(), nullptr};
+        const char* incl = "-I";
+        std::vector<const char*> llvm_argv = {"-rui"};
+        for (const std::string &p : faustLibraryPaths) {
+	        llvm_argv.push_back(incl);
+	        llvm_argv.push_back(p.c_str());
+        }
+        llvm_argv.push_back(nullptr);
 
 #if !HISE_FAUST_USE_LLVM_JIT
-        interpreterFactory = ::faust::createInterpreterDSPFactoryFromString("faust", code, llvm_argc,
-	      llvm_argv, errorMessage);
+        interpreterFactory = ::faust::createInterpreterDSPFactoryFromString("faust", code, llvm_argv.size() - 1,
+	      &(llvm_argv[0]), errorMessage);
         if (interpreterFactory == nullptr) {
             // TODO error indication
             std::cout << "Faust interpreter instantiation failed:" << std::endl
@@ -93,8 +98,8 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         std::cout << "Faust interpreter instantiation successful" << std::endl;
         faustDsp = interpreterFactory->createDSPInstance();
 #else // HISE_FAUST_USE_LLVM_JIT
-        jitFactory = ::faust::createDSPFactoryFromString("faust", code, llvm_argc, llvm_argv, "",
-                                                         errorMessage, jitOptimize);
+        jitFactory = ::faust::createDSPFactoryFromString("faust", code, llvm_argv.size() - 1, &(llvm_argv[0]),
+                                                         "", errorMessage, jitOptimize);
         if (jitFactory == nullptr) {
             // TODO error indication
             std::cout << "Faust jit compilation failed:" << std::endl
@@ -280,12 +285,22 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 		return true;
 	}
 
-	static std::string genStaticInstanceCode(std::string _classId, std::string srcPath, std::string includePath, std::string dest_dir) {
+	static std::string genStaticInstanceCode(std::string _classId, std::string srcPath, std::vector<std::string> faustLibraryPaths, std::string dest_dir) {
 		std::string dest_file = _classId + ".cpp";
-		int argc = 15;
+		// int argc = 15;
 		std::string faustClassId = prefixClassForFaust(_classId);
-		const char* argv[] = {"-uim", "-nvi", "-rui", "-I", includePath.c_str(), "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str(), nullptr};
-		if (genAuxFile(srcPath, argc, argv)) {
+		// const char* argv[] = {"-uim", "-nvi", "-rui", "-I", includePath.c_str(), "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str(), nullptr};
+
+
+        const char* incl = "-I";
+        std::vector<const char*> argv = {"-uim", "-nvi", "-rui", "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str()};
+        for (const std::string &p : faustLibraryPaths) {
+	        argv.push_back(incl);
+	        argv.push_back(p.c_str());
+        }
+        argv.push_back(nullptr);
+
+        if (genAuxFile(srcPath, argv.size() - 1, &(argv[0]))) {
 			DBG("hi_faust_jit: Static code generation successful: " + dest_file);
 			return dest_file;
 		}

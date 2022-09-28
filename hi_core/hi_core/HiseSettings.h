@@ -102,6 +102,7 @@ DECLARE_ID(LegacyCPUSupport);
 DECLARE_ID(RebuildPoolFiles);
 DECLARE_ID(Support32BitMacOS);
 DECLARE_ID(CustomNodePath);
+DECLARE_ID(FaustPath)
 
 Array<Identifier> getAllIds();
 

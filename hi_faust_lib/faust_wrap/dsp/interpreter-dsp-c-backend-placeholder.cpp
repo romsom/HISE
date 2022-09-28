@@ -5,46 +5,46 @@ namespace faust {
 
 
     // interpreter_dsp
-    int interpreter_dsp::getNumInputs()
-    { return ((::interpreter_dsp*)this)->getNumInputs(); }
+    // int interpreter_dsp::getNumInputs()
+    // { return ((::interpreter_dsp*)this)->getNumInputs(); }
        
-    int interpreter_dsp::getNumOutputs()
-    { return ((::interpreter_dsp*)this)->getNumOutputs(); }
+    // int interpreter_dsp::getNumOutputs()
+    // { return ((::interpreter_dsp*)this)->getNumOutputs(); }
         
-    void interpreter_dsp::buildUserInterface(UI* ui_interface)
-    { ((::interpreter_dsp*)this)->buildUserInterface((::UI*) ui_interface); }
+    // void interpreter_dsp::buildUserInterface(UI* ui_interface)
+    // { ((::interpreter_dsp*)this)->buildUserInterface((::UI*) ui_interface); }
        
-    int interpreter_dsp::getSampleRate()
-    { return ((::interpreter_dsp*)this)->getSampleRate(); }
+    // int interpreter_dsp::getSampleRate()
+    // { return ((::interpreter_dsp*)this)->getSampleRate(); }
         
-    void interpreter_dsp::init(int sample_rate)
-    { ((::interpreter_dsp*)this)->init(sample_rate); }
+    // void interpreter_dsp::init(int sample_rate)
+    // { ((::interpreter_dsp*)this)->init(sample_rate); }
        
-    void interpreter_dsp::instanceInit(int sample_rate)
-    { ((::interpreter_dsp*)this)->instanceInit(sample_rate); }
+    // void interpreter_dsp::instanceInit(int sample_rate)
+    // { ((::interpreter_dsp*)this)->instanceInit(sample_rate); }
     
-    void interpreter_dsp::instanceConstants(int sample_rate)
-    { ((::interpreter_dsp*)this)->instanceConstants(sample_rate); }
+    // void interpreter_dsp::instanceConstants(int sample_rate)
+    // { ((::interpreter_dsp*)this)->instanceConstants(sample_rate); }
     
-    void interpreter_dsp::instanceResetUserInterface()
-    { ((::interpreter_dsp*)this)->instanceResetUserInterface(); }
+    // void interpreter_dsp::instanceResetUserInterface()
+    // { ((::interpreter_dsp*)this)->instanceResetUserInterface(); }
         
-    void interpreter_dsp::instanceClear()
-    { ((::interpreter_dsp*)this)->instanceClear(); }
+    // void interpreter_dsp::instanceClear()
+    // { ((::interpreter_dsp*)this)->instanceClear(); }
         
-    interpreter_dsp* interpreter_dsp::clone()
-    { return (interpreter_dsp*)((::interpreter_dsp*)this)->clone(); }
+    // interpreter_dsp* interpreter_dsp::clone()
+    // { return (interpreter_dsp*)((::interpreter_dsp*)this)->clone(); }
         
-    void interpreter_dsp::metadata(Meta* m)
-    { ((::interpreter_dsp*)this)->metadata((::Meta*) m); }
+    // void interpreter_dsp::metadata(Meta* m)
+    // { ((::interpreter_dsp*)this)->metadata((::Meta*) m); }
         
-    void interpreter_dsp::compute(int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs)
-    { ((::interpreter_dsp*)this)->compute(count, inputs, outputs); }
+    // void interpreter_dsp::compute(int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs)
+    // { ((::interpreter_dsp*)this)->compute(count, inputs, outputs); }
 
     // interpreter_dsp_factory
     
-    interpreter_dsp_factory::~interpreter_dsp_factory()
-    { ((::interpreter_dsp_factory*)this)->~interpreter_dsp_factory(); }
+    // interpreter_dsp_factory::~interpreter_dsp_factory()
+    // { ((::interpreter_dsp_factory*)this)->~interpreter_dsp_factory(); }
 
     std::string interpreter_dsp_factory::getName()
     { return ((::interpreter_dsp_factory*)this)->getName(); }
@@ -68,8 +68,8 @@ namespace faust {
     std::vector<std::string> interpreter_dsp_factory::getIncludePathnames()
     { return ((::interpreter_dsp_factory*)this)->getIncludePathnames(); }
         
-    interpreter_dsp* interpreter_dsp_factory::createDSPInstance()
-    { return (interpreter_dsp*)((::interpreter_dsp_factory*)this)->createDSPInstance(); }
+    // interpreter_dsp* interpreter_dsp_factory::createDSPInstance()
+    // { return (interpreter_dsp*)((::interpreter_dsp_factory*)this)->createDSPInstance(); }
         
     void interpreter_dsp_factory::setMemoryManager(dsp_memory_manager* manager)
     { ((::interpreter_dsp_factory*)this)->setMemoryManager((::dsp_memory_manager*) manager); }

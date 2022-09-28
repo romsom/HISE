@@ -643,10 +643,10 @@ struct ValueTreeBuilder: public Base
 		if (r.wasOk())
 		{
 			br.code = getCurrentCode();
-			br.faustClassIds = faustClassIds;
 		}
 		else
 			br.code = wrongNodeCode;
+		br.faustClassIds = faustClassIds;
 
 		return br;
 	}

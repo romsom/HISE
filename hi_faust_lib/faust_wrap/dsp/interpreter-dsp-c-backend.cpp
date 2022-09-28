@@ -96,6 +96,8 @@ namespace faust {
 	    std::vector<char> buffer;
 	    // allocate 4096 bytes as per spec in <faust/dsp/interpreter-dsp-c.h>
 	    buffer.reserve(4096);
+	    // make windows happy: provide the item we are virtually referencing later
+	    buffer.push_back(0);
 	    auto res = (interpreter_dsp_factory*)::createCInterpreterDSPFactoryFromString(name_app.c_str(), dsp_content.c_str(), argc, argv, &(buffer[0]));
 	    error_msg = (const char*)&(buffer[0]);
 	    return res;

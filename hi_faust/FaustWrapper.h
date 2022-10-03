@@ -59,7 +59,7 @@ struct faust_base_wrapper {
         }
 
         if (_nChannels != specs.numChannels || _nFramesMax != specs.blockSize) {
-            std::cout << "Faust: Resizing buffers" << std::endl;
+            DBG("Faust: Resizing buffers");
             _nChannels = specs.numChannels;
             _nFramesMax = specs.blockSize;
             resizeBuffer();

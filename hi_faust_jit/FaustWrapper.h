@@ -285,10 +285,7 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 
 	static std::string genStaticInstanceCode(std::string _classId, std::string srcPath, std::vector<std::string> faustLibraryPaths, std::string dest_dir) {
 		std::string dest_file = _classId + ".cpp";
-		// int argc = 15;
 		std::string faustClassId = prefixClassForFaust(_classId);
-		// const char* argv[] = {"-uim", "-nvi", "-rui", "-I", includePath.c_str(), "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str(), nullptr};
-
 
         const char* incl = "-I";
         std::vector<const char*> argv = {"-uim", "-nvi", "-rui", "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str()};

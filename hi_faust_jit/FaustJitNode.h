@@ -24,15 +24,16 @@ struct faust_jit_node: public scriptnode::WrapperNode
     }
     File getFaustRootFile();
     File getFaustFile(String basename);
-	std::vector<std::string> getFaustLibraryPaths();
+    std::vector<std::string> getFaustLibraryPaths();
 
     // pure virtual to set/get the class in faust_jit_node and
     // only get in faust_node<T>, here because of UI code
     virtual String getClassId();
     virtual StringArray getAvailableClassIds();
+    virtual bool removeClassId(String classIdToRemove);
     virtual void setClass(const String& newClassId);
-	virtual void createSourceAndSetClass(const String newClassId);
-	virtual void reinitFaustWrapper();
+    virtual void createSourceAndSetClass(const String newClassId);
+    virtual void reinitFaustWrapper();
 
     // Parameter methods
     void parameterUpdated(ValueTree child, bool wasAdded);
@@ -41,6 +42,8 @@ struct faust_jit_node: public scriptnode::WrapperNode
 
     // provide correct pointer to createExtraComponent()
     virtual void* getObjectPtr() override { return (void*)this; }
+
+    void logError(String errorMessage);
 
 protected:
     std::unique_ptr<faust_jit_wrapper> faust;
@@ -52,7 +55,6 @@ private:
     void loadSource();
     NodePropertyT<String> classId;
     void updateClassId(Identifier, var newValue);
-    void logError(std::string errorMessage);
 };
 } // namespace faust
 } // namespace scriptnode

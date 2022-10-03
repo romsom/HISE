@@ -174,6 +174,14 @@ String faust_jit_node::getClassId()
     return classId.getValue();
 }
 
+bool faust_jit_node::removeClassId(String classIdToRemove)
+{
+	// TODO remove from ValueTree
+	if (getClassId() == classIdToRemove)
+		return false;
+	return true;
+}
+
 void faust_jit_node::loadSource()
 {
     auto newClassId = getClassId();
@@ -198,7 +206,7 @@ void faust_jit_node::createSourceAndSetClass(const String newClassId)
     }
     setClass(newClassId);
 }
-void faust_jit_node::logError(std::string errorMessage)
+void faust_jit_node::logError(String errorMessage)
 {
 	auto p = dynamic_cast<Processor*>(getScriptProcessor());
 	debugError(p, errorMessage);

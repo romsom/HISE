@@ -73,6 +73,8 @@ struct FaustMenuBar : public Component,
         NEW_FILE = MENU_OPTION_FIRST,
         IMPORT_FILE,
         IMPORT_LIB,
+        RENAME_FILE,
+        REMOVE_FILE,
         // add more options here
         MENU_OPTION_LAST,
         MENU_OPTION_INVALID,
@@ -82,6 +84,8 @@ struct FaustMenuBar : public Component,
         {NEW_FILE, "Create new file"},
         {IMPORT_FILE, "Import file into project"},
         {IMPORT_LIB, "Import library into project"},
+        {RENAME_FILE, "Rename file"},
+        {REMOVE_FILE, "Remove entry and file"},
             // add description for more options here
         {MENU_OPTION_INVALID, "Invalid Option (BUG)"}
     };
@@ -107,6 +111,15 @@ struct FaustMenuBar : public Component,
         }
     }
 
+	std::optional<File> promptForDestinationFile(String extension, File& previousDestFile)
+	{
+		auto destChooser = juce::FileChooser("File with the same name already exists, select a destination file",
+		                                     previousDestFile, "*." + extension);
+		if (!destChooser.browseForFileToSave(true))
+			return {};
+		return destChooser.getResult();
+	}
+
 	void importFile(String extension) {
 		auto chooser = juce::FileChooser("Faust file to import into the project",
 		                                 node->getFaustRootFile(), "*." + extension);
@@ -121,11 +134,10 @@ struct FaustMenuBar : public Component,
 		File destFile = node->getFaustRootFile().getChildFile(sourceFile.getFileNameWithoutExtension() + "." + extension);
 
 		if (destFile.exists()) {
-			auto destChooser = juce::FileChooser("File with the same name already exists, select a destination file",
-			                                     destFile, "*." + extension);
-			if (!destChooser.browseForFileToSave(true))
+			auto maybeNewDestFile = promptForDestinationFile(extension, destFile);
+			if (!maybeNewDestFile.has_value())
 				return;
-			destFile = destChooser.getResult();
+			destFile = *maybeNewDestFile;
 		}
 
 		auto classId = destFile.getFileNameWithoutExtension();
@@ -143,6 +155,35 @@ struct FaustMenuBar : public Component,
 			node->setClass(destFile.getFileNameWithoutExtension());
 	}
 
+	void renameFile() {
+		auto classId = node->getClassId();
+		auto faustDir = node->getFaustRootFile();
+		auto currentFile = faustDir.getChildFile(classId + ".dsp");
+		
+		auto maybeNewDestFile = promptForDestinationFile("dsp", currentFile);
+		if (!maybeNewDestFile.has_value())
+			return;
+		auto destFile = *maybeNewDestFile;
+
+		// TODO race conditions?
+
+		node->removeClassId(classId);
+		if (!currentFile.moveFileTo(destFile))
+		{
+			node->logError("Could not move file to new location: " +
+			               currentFile.getFullPathName() + " --> " +
+			               destFile.getFullPathName());
+			return;
+		}
+
+		node->setClass(destFile.getFileNameWithoutExtension());
+		
+	}
+
+	void removeFile() {
+		
+	}
+
     void executeMenuAction(int option)
     {
         switch(option) {
@@ -155,6 +196,10 @@ struct FaustMenuBar : public Component,
         case IMPORT_LIB:
 	        importFile("lib");
 	        break;
+        case RENAME_FILE:
+	        renameFile();
+        case REMOVE_FILE:
+	        removeFile();
 
             // add code for more functions here
         default:

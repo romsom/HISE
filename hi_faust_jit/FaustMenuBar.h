@@ -97,6 +97,10 @@ struct FaustMenuBar : public Component,
 
         if (name.isNotEmpty())
         {
+	        if (!faust_jit_wrapper::isValidClassId(name)) {
+		        DBG("Can't add file, because its name is not a valid class identifier: " + name);
+		        return;
+	        }
             node->createSourceAndSetClass(name);
             rebuildComboBoxItems();
             //refreshButtonState();
@@ -122,6 +126,12 @@ struct FaustMenuBar : public Component,
 			if (!destChooser.browseForFileToSave(true))
 				return;
 			destFile = destChooser.getResult();
+		}
+
+		auto classId = destFile.getFileNameWithoutExtension();
+		if (extension == "dsp" && !faust_jit_wrapper::isValidClassId(classId)) {
+			DBG("Can't import file, because its name is not a valid class identifier: " + classId);
+			return;
 		}
 
 		DBG("Copying: \"" + sourceFile.getFullPathName() + "\" -> \"" + destFile.getFullPathName() + "\"");

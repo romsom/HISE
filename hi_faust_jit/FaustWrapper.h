@@ -51,11 +51,6 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 
 	bool setup(std::vector<std::string> faustLibraryPaths, std::string& error_msg) {
         juce::ScopedLock sl(jitLock);
-        // because the audio thread is real-time, we can wait for the duration of one
-        // frame and be sure we don't modify any data the audio thread still uses
-        // TODO: calculate actual duration
-        std::this_thread::sleep_for(20ms);
-
         // cleanup old code and factories
         // make sure faustDsp is nullptr in case we fail to recompile
         // so we don't use an old deallocated faustDsp in process (checks

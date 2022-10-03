@@ -2,6 +2,7 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
+#include <cctype>
 using namespace std::chrono_literals;
 
 #ifndef __FAUST_JIT_WRAPPER_H
@@ -14,15 +15,31 @@ class faust_jit_node;
 // wrapper struct for faust types to avoid name-clash
 struct faust_jit_wrapper : public faust_base_wrapper {
 
-	faust_jit_wrapper(String classId):
-	    faust_base_wrapper(nullptr),
+	static bool isValidClassId(String cid)
+	{
+		if (cid.length() <= 0)
+			return false;
+
+		if (!isalpha(cid[0]) && cid[0] != '_')
+			return false;
+
+		for (auto c : cid) {
+			if (!isalnum(c) && cid[0] != '_')
+				return false;
+		}
+
+		return true;
+	}
+
+	faust_jit_wrapper():
+		faust_base_wrapper(nullptr),
 #if !HISE_FAUST_USE_LLVM_JIT
-	    interpreterFactory(nullptr),
+		interpreterFactory(nullptr),
 #else // HISE_FAUST_USE_LLVM_JIT
-        jitFactory(nullptr),
+		jitFactory(nullptr),
 #endif // !HISE_FAUST_USE_LLVM_JIT
-        classId(classId)
-    { }
+		classId("")
+	{ }
 
     ~faust_jit_wrapper()
     {
@@ -149,9 +166,12 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         return classId;
     }
 
-	void setCode(String newClassId, std::string newCode) {
+	bool setCode(String newClassId, std::string newCode) {
+		if (!isValidClassId(newClassId))
+			return false;
 		classId = newClassId;
 		code = newCode;
+		return true;
 	}
 
     void process(ProcessDataDyn& data)
@@ -199,6 +219,10 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 	}
 
 	static std::string genStaticInstanceBoilerplate(std::string dest_dir, std::string _classId) {
+		if (!isValidClassId(_classId)) {
+			// TODO: error indication
+			return "";
+		}
 		std::string dest_file = _classId + ".h";
 		std::string metaDataClass = _classId + "MetaData";
 		std::string faustClassId = prefixClassForFaust(_classId);
@@ -279,6 +303,11 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 	}
 
 	static std::string genStaticInstanceCode(std::string _classId, std::string srcPath, std::vector<std::string> faustLibraryPaths, std::string dest_dir) {
+		if (!isValidClassId(_classId)) {
+			// TODO: error indication
+			return "";
+		}
+
 		std::string dest_file = _classId + ".cpp";
 		std::string faustClassId = prefixClassForFaust(_classId);
 

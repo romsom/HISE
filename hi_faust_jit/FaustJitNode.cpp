@@ -11,7 +11,7 @@ namespace faust {
 faust_jit_node::faust_jit_node(DspNetwork* n, ValueTree v) :
 	WrapperNode(n, v),
     classId(PropertyIds::ClassId, ""),
-    faust(new faust_jit_wrapper("faust"))
+    faust(new faust_jit_wrapper())
 {
     extraComponentFunction = [](void* o, PooledUIUpdater* u)
     {
@@ -198,10 +198,15 @@ void faust_jit_node::createSourceAndSetClass(const String newClassId)
     }
     setClass(newClassId);
 }
+void faust_jit_node::logError(std::string errorMessage)
+{
+	auto p = dynamic_cast<Processor*>(getScriptProcessor());
+	debugError(p, errorMessage);
+}
 
 void faust_jit_node::reinitFaustWrapper()
 {
-	auto newClassId = getClassId();
+	String newClassId = getClassId();
     resetParameters();
     File sourceFile = getFaustFile(newClassId);
 
@@ -215,17 +220,19 @@ void faust_jit_node::reinitFaustWrapper()
 
     // Load file and recompile
     String code = sourceFile.loadFileAsString();
-    faust->setCode(newClassId, code.toStdString());
-    // setup dsp
+    bool classIdValid = faust->setCode(newClassId, code.toStdString());
+    if (!classIdValid)
+    {
+	    logError("Invalid name for exported C++ class: " + newClassId.toStdString());
+	    return;
+    }
+    // Setup DSP
     std::string error_msg;
     bool success = faust->setup(getFaustLibraryPaths(), error_msg);
     DBG("Faust initialization: " + std::string(success ? "success" : "failed"));
-    // TODO: error handling
     if (!success)
     {
-        auto p = dynamic_cast<Processor*>(getScriptProcessor());
-
-        debugError(p, error_msg);
+	    logError(error_msg);
     }
     setupParameters();
 }

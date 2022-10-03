@@ -52,6 +52,7 @@ private:
     void loadSource();
     NodePropertyT<String> classId;
     void updateClassId(Identifier, var newValue);
+    void logError(std::string errorMessage);
 };
 } // namespace faust
 } // namespace scriptnode

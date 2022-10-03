@@ -62,6 +62,14 @@ Use the Faust interpreter instead of the LLVM JIT
 #define HISE_FAUST_USE_LLVM_JIT 1
 #endif // HISE_FAUST_USE_LLVM_JIT
 
+/** Config: HISE_FAUST_USE_LIBFAUST_C_INTERFACE
+
+Use libfaust's C interface instead of C++ (Recommended for Windows)
+*/
+#ifndef HISE_FAUST_USE_LIBFAUST_C_INTERFACE
+#define HISE_FAUST_USE_LIBFAUST_C_INTERFACE 0
+#endif // HISE_FAUST_USE_LIBFAUST_C_INTERFACE
+
 #include "../hi_faust_types/hi_faust_types.h"
 #if HISE_FAUST_USE_LLVM_JIT
 #include "faust_wrap/dsp/llvm-dsp.h"

@@ -49,7 +49,7 @@ struct faust_jit_wrapper : public faust_base_wrapper {
     // Mutex for synchronization of compilation and processing
     juce::CriticalSection jitLock;
 
-	bool setup(std::vector<std::string> faustLibraryPaths) {
+	bool setup(std::vector<std::string> faustLibraryPaths, std::string& error_msg) {
         juce::ScopedLock sl(jitLock);
         // because the audio thread is real-time, we can wait for the duration of one
         // frame and be sure we don't modify any data the audio thread still uses
@@ -90,31 +90,29 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         interpreterFactory = ::faust::createInterpreterDSPFactoryFromString("faust", code, llvm_argv.size() - 1,
 	      &(llvm_argv[0]), errorMessage);
         if (interpreterFactory == nullptr) {
-            // TODO error indication
-            std::cout << "Faust interpreter instantiation failed:" << std::endl
-                      << errorMessage << std::endl;
+            // error indication
+	        error_msg = errorMessage;
             return false;
         }
-        std::cout << "Faust interpreter instantiation successful" << std::endl;
+        DBG("Faust interpreter instantiation successful");
         faustDsp = interpreterFactory->createDSPInstance();
 #else // HISE_FAUST_USE_LLVM_JIT
         jitFactory = ::faust::createDSPFactoryFromString("faust", code, llvm_argv.size() - 1, &(llvm_argv[0]),
                                                          "", errorMessage, jitOptimize);
         if (jitFactory == nullptr) {
-            // TODO error indication
-            std::cout << "Faust jit compilation failed:" << std::endl
-                      << errorMessage << std::endl;
+            // error indication
+	        error_msg = errorMessage;
             return false;
         }
-        std::cout << "Faust jit compilation successful" << std::endl;
+        DBG("Faust jit compilation successful");
         faustDsp = jitFactory->createDSPInstance();
 #endif // !HISE_FAUST_USE_LLVM_JIT
         if (faustDsp == nullptr) {
-            std::cout << "Faust DSP instantiation" << std::endl;
+            error_msg = "Faust DSP instantiation failed";
             return false;
         }
 
-        std::cout << "Faust DSP instantiation successful" << std::endl;
+        DBG("Faust DSP instantiation successful");
 
         faust_base_wrapper::setup();
         
@@ -133,7 +131,7 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         }
 
         if (_nChannels != specs.numChannels || _nFramesMax != specs.blockSize) {
-            std::cout << "Faust: Resizing buffers" << std::endl;
+            DBG("Faust: Resizing buffers");
             _nChannels = specs.numChannels;
             _nFramesMax = specs.blockSize;
             resizeBuffer();

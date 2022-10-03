@@ -217,14 +217,15 @@ void faust_jit_node::reinitFaustWrapper()
     String code = sourceFile.loadFileAsString();
     faust->setCode(newClassId, code.toStdString());
     // setup dsp
-    bool success = faust->setup(getFaustLibraryPaths());
-    std::cout << "Faust initialization: " << (success ? "success" : "failed") << std::endl;
+    std::string error_msg;
+    bool success = faust->setup(getFaustLibraryPaths(), error_msg);
+    DBG("Faust initialization: " + std::string(success ? "success" : "failed"));
     // TODO: error handling
     if (!success)
     {
         auto p = dynamic_cast<Processor*>(getScriptProcessor());
 
-        debugError(p, "FaustError");
+        debugError(p, error_msg);
     }
     setupParameters();
 }

@@ -37,7 +37,8 @@ struct faust_base_wrapper {
     std::vector<float*> inputChannelPointers;
     std::vector<float*> outputChannelPointers;
 
-    bool setup() {
+    // This method assumes faustDsp to be initialized correctly
+    virtual bool setup() {
         faustDsp->buildUserInterface(&ui);
 
         DBG("Faust parameters:");
@@ -68,18 +69,22 @@ struct faust_base_wrapper {
     }
 
     void init() {
-	    faustDsp->init(sampleRate);
+        if (faustDsp)
+            faustDsp->init(sampleRate);
     }
 
     void reset()
     {
-	    faustDsp->instanceClear();
+        if (faustDsp)
+            faustDsp->instanceClear();
     }
+
 
     String getClassId() {
         return classId;
     }
 
+	// This method assumes faustDsp to be initialized correctly
 	void process(ProcessDataDyn& data)
 	{
 		// we have either a static ::faust::dsp object here, or we hold the jit lock
@@ -100,6 +105,7 @@ struct faust_base_wrapper {
 		}
 	}
 
+	// This method assumes faustDsp to be initialized correctly
 	template <class FrameDataType> void processFrame(FrameDataType& data)
 	{
 		int n_faust_inputs = faustDsp->getNumInputs();

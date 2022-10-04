@@ -130,17 +130,6 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         return true;
     }
 
-    void init() {
-        if (faustDsp)
-            faustDsp->init(sampleRate);
-    }
-
-    void reset()
-    {
-        if (faustDsp) {
-            faustDsp->instanceClear();
-        }
-    }
 
     String getClassId() {
         return classId;

@@ -131,25 +131,6 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         return true;
     }
 
-
-    void prepare(PrepareSpecs specs)
-    {
-        // recompile if sample rate changed
-        int newSampleRate = (int)specs.sampleRate;
-        if (newSampleRate != sampleRate) {
-            sampleRate = newSampleRate;
-            // init samplerate
-            init();
-        }
-
-        if (_nChannels != specs.numChannels || _nFramesMax != specs.blockSize) {
-            DBG("Faust: Resizing buffers");
-            _nChannels = specs.numChannels;
-            _nFramesMax = specs.blockSize;
-            resizeBuffer();
-        }
-    }
-
     void init() {
         if (faustDsp)
             faustDsp->init(sampleRate);
@@ -185,28 +166,6 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         }
     }
 
-    float** getRawInputChannelPointers() {
-        return &inputChannelPointers[0];
-    }
-
-    void resizeBuffer()
-    {
-        inputBuffer.resize(_nChannels * _nFramesMax);
-        // setup new pointers
-        inputChannelPointers.resize(_nChannels);
-        inputChannelPointers.clear();
-        for (int i=0; i<inputBuffer.size(); i+=_nFramesMax) {
-            inputChannelPointers.push_back(&inputBuffer[i]);
-        }
-    }
-
-    void bufferChannelsData(float** channels, int nChannels, int nFrames)
-    {
-        assert(nChannels == _nChannels);
-        assert(nFrames <= _nFramesMax);
-
-        for (int i=0; i<nChannels; i++) {
-            memcpy(inputChannelPointers[i], channels[i], nFrames * sizeof(float));
         }
     }
 

@@ -93,17 +93,17 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         const char* incl = "-I";
         std::vector<const char*> llvm_argv = {"-rui"};
         for (const std::string &p : faustLibraryPaths) {
-	        llvm_argv.push_back(incl);
-	        llvm_argv.push_back(p.c_str());
+            llvm_argv.push_back(incl);
+            llvm_argv.push_back(p.c_str());
         }
         llvm_argv.push_back(nullptr);
 
 #if !HISE_FAUST_USE_LLVM_JIT
         interpreterFactory = ::faust::createInterpreterDSPFactoryFromString("faust", code, llvm_argv.size() - 1,
-	      &(llvm_argv[0]), errorMessage);
+          &(llvm_argv[0]), errorMessage);
         if (interpreterFactory == nullptr) {
             // error indication
-	        error_msg = errorMessage;
+            error_msg = errorMessage;
             return false;
         }
         DBG("Faust interpreter instantiation successful");
@@ -113,7 +113,7 @@ struct faust_jit_wrapper : public faust_base_wrapper {
                                                          "", errorMessage, jitOptimize);
         if (jitFactory == nullptr) {
             // error indication
-	        error_msg = errorMessage;
+            error_msg = errorMessage;
             return false;
         }
         DBG("Faust jit compilation successful");
@@ -127,7 +127,6 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         DBG("Faust DSP instantiation successful");
 
         faust_base_wrapper::setup();
-        
         return true;
     }
 
@@ -157,10 +156,10 @@ struct faust_jit_wrapper : public faust_base_wrapper {
 
     void process(ProcessDataDyn& data)
     {
-	    // run jitted code only while holding the corresponding lock:
+        // run jitted code only while holding the corresponding lock:
         juce::ScopedTryLock stl(jitLock);
         if (stl.isLocked() && faustDsp) {
-	        faust_base_wrapper::process(data);
+            faust_base_wrapper::process(data);
         } else {
             // std::cout << "Faust: dsp was not initialized" << std::endl;
         }
@@ -281,8 +280,8 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         const char* incl = "-I";
         std::vector<const char*> argv = {"-uim", "-nvi", "-rui", "-lang", "cpp", "-scn", "faust::dsp", "-cn", faustClassId.c_str(), "-O", dest_dir.c_str(), "-o", dest_file.c_str()};
         for (const std::string &p : faustLibraryPaths) {
-	        argv.push_back(incl);
-	        argv.push_back(p.c_str());
+            argv.push_back(incl);
+            argv.push_back(p.c_str());
         }
         argv.push_back(nullptr);
 

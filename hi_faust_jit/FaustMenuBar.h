@@ -155,7 +155,8 @@ struct FaustMenuBar : public Component,
 			node->setClass(destFile.getFileNameWithoutExtension());
 	}
 
-	void renameFile() {
+	void renameFile()
+	{
 		auto classId = node->getClassId();
 		auto faustDir = node->getFaustRootFile();
 		auto currentFile = faustDir.getChildFile(classId + ".dsp");
@@ -180,7 +181,8 @@ struct FaustMenuBar : public Component,
 		
 	}
 
-	void removeFile() {
+	void removeFile()
+	{
 		
 	}
 

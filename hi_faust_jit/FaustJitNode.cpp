@@ -114,7 +114,10 @@ void faust_jit_node::process(ProcessDataDyn& data)
 }
 
 void faust_jit_node::processFrame(FrameType& data)
-{ }
+{
+	if (isBypassed()) return;
+	faust->faust_jit_wrapper::processFrame<FrameType>(data);
+}
 
 File faust_jit_node::getFaustRootFile()
 {

@@ -166,6 +166,14 @@ struct faust_jit_wrapper : public faust_base_wrapper {
         }
     }
 
+    template <class FrameDataType> void processFrame(FrameDataType& data)
+    {
+        // run jitted code only while holding the corresponding lock:
+        juce::ScopedTryLock stl(jitLock);
+        if (stl.isLocked() && faustDsp) {
+            faust_base_wrapper::processFrame<FrameDataType>(data);
+        } else {
+            // std::cout << "Faust: dsp was not initialized" << std::endl;
         }
     }
 

@@ -25,7 +25,7 @@
 #ifndef __meta_wrap__
 #define __meta_wrap__
 
-#include "faust_wrap/export.h"
+#include "../export.h"
 
 namespace faust {
 /**

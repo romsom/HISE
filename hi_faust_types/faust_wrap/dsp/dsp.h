@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 
-#include "faust_wrap/export.h"
+#include "../export.h"
 
 #ifndef FAUSTFLOAT
 #define FAUSTFLOAT float

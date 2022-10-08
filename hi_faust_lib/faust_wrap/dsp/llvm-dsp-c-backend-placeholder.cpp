@@ -70,11 +70,11 @@ namespace faust {
     // llvm_dsp* llvm_dsp_factory::createDSPInstance()
     // { return (llvm_dsp*)((::llvm_dsp_factory*)this)->createDSPInstance(); }
         
-    void llvm_dsp_factory::setMemoryManager(dsp_memory_manager* manager)
+    void llvm_dsp_factory::setMemoryManager(::faust::dsp_memory_manager* manager)
     { ((::llvm_dsp_factory*)this)->setMemoryManager((::dsp_memory_manager*) manager); }
         
-    dsp_memory_manager* llvm_dsp_factory::getMemoryManager()
-    { return (dsp_memory_manager*) ((::llvm_dsp_factory*)this)->getMemoryManager(); }
+    ::faust::dsp_memory_manager* llvm_dsp_factory::getMemoryManager()
+    { return (::faust::dsp_memory_manager*) ((::llvm_dsp_factory*)this)->getMemoryManager(); }
 
 
     LIBFAUST_API llvm_dsp_factory* getDSPFactoryFromSHAKey(const std::string& sha_key)

@@ -126,10 +126,10 @@ class LIBFAUST_API llvm_dsp_factory : public dsp_factory {
         llvm_dsp* createDSPInstance();
         
         /* Set a custom memory manager to be used when creating instances */
-        void setMemoryManager(dsp_memory_manager* manager);
+        void setMemoryManager(::faust::dsp_memory_manager* manager);
         
         /* Return the currently set custom memory manager */
-        dsp_memory_manager* getMemoryManager();
+        ::faust::dsp_memory_manager* getMemoryManager();
 
 };
 

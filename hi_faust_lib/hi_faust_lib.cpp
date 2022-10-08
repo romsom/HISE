@@ -3,7 +3,6 @@
 #include <faust/gui/meta.h>
 #include <faust/dsp/libfaust.h>
 
-
 #include "../hi_faust_types/hi_faust_types.h"
 #include "faust_wrap/dsp/libfaust.h"
 #if HISE_FAUST_USE_LIBFAUST_C_INTERFACE

@@ -1,4 +1,3 @@
-#include <faust/dsp/libfaust-c.h>
 #include <vector>
 #include <string>
 

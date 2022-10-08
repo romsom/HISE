@@ -1,7 +1,5 @@
 #include <faust/dsp/dsp.h>
 #include <faust/dsp/llvm-dsp-c.h>
-//#include <faust/dsp/llvm-dsp.h> // TODO remove when conversion is done
-#include "faust_wrap/dsp/llvm-dsp.h"
 #include <iostream>
 
 namespace faust {

@@ -1,7 +1,5 @@
 #include <faust/dsp/dsp.h>
 #include <faust/dsp/interpreter-dsp-c.h>
-//#include <faust/dsp/interpreter-dsp.h> // TODO remove when conversion is done
-#include "faust_wrap/dsp/interpreter-dsp.h"
 #include <iostream>
 
 namespace faust {

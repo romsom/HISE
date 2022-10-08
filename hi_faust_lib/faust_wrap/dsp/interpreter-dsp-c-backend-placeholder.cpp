@@ -1,6 +1,3 @@
-#include <faust/dsp/interpreter-dsp.h>
-#include "faust_wrap/dsp/interpreter-dsp.h"
-
 namespace faust {
 
 

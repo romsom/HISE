@@ -1,6 +1,4 @@
 #include <faust/dsp/libfaust.h>
-#include "faust_wrap/dsp/libfaust.h"
-
 
 namespace faust {
 	std::string generateSHA1(const std::string& data) {

@@ -1,5 +1,4 @@
 #include <faust/dsp/libfaust.h>
-#include "faust_wrap/dsp/libfaust.h"
 
 
 namespace faust {

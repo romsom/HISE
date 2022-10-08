@@ -94,8 +94,8 @@
         <MODULEPATH id="hi_rlottie" path="../../"/>
         <MODULEPATH id="hi_faust" path="../../"/>
         <MODULEPATH id="hi_faust_jit" path="../../"/>
-        <MODULEPATH id="hi_faust_types" path="../.."/>
-        <MODULEPATH id="hi_faust_lib" path="../.."/>
+        <MODULEPATH id="hi_faust_types" path="../../"/>
+        <MODULEPATH id="hi_faust_lib" path="../../"/>
       </MODULEPATHS>
     </XCODE_MAC>
     <XCODE_IPHONE targetFolder="Builds/iOS" iosScreenOrientation="UIInterfaceOrientationLandscapeLeft,UIInterfaceOrientationLandscapeRight"
@@ -144,9 +144,9 @@
         <MODULEPATH id="hi_snex" path="../../"/>
         <MODULEPATH id="hi_rlottie" path="../../"/>
         <MODULEPATH id="hi_faust" path="../../"/>
-        <MODULEPATH id="hi_faust_jit" path="../.."/>
-        <MODULEPATH id="hi_faust_types" path="../.."/>
-        <MODULEPATH id="hi_faust_lib" path="../.."/>
+        <MODULEPATH id="hi_faust_jit" path="../../"/>
+        <MODULEPATH id="hi_faust_types" path="../../"/>
+        <MODULEPATH id="hi_faust_lib" path="../../"/>
       </MODULEPATHS>
     </XCODE_IPHONE>
     <VS2017 targetFolder="Builds/VisualStudio2017" smallIcon="ho3qQy" bigIcon="ho3qQy"
@@ -198,9 +198,9 @@
         <MODULEPATH id="hi_snex" path="../../"/>
         <MODULEPATH id="hi_rlottie" path="../../"/>
         <MODULEPATH id="hi_faust" path="../../"/>
-        <MODULEPATH id="hi_faust_jit" path="../.."/>
-        <MODULEPATH id="hi_faust_types" path="../.."/>
-        <MODULEPATH id="hi_faust_lib" path="../.."/>
+        <MODULEPATH id="hi_faust_jit" path="../../"/>
+        <MODULEPATH id="hi_faust_types" path="../../"/>
+        <MODULEPATH id="hi_faust_lib" path="../../"/>
       </MODULEPATHS>
     </VS2017>
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraDefs="USE_IPP=0&#10;HI_ENABLE_EXPANSION_EDITING=1&#10;HISE_ENABLE_EXPANSIONS=1&#10;HISE_SCRIPT_SERVER_TIMEOUT=20000&#10;"
@@ -244,9 +244,9 @@
         <MODULEPATH id="hi_snex" path="../../"/>
         <MODULEPATH id="hi_rlottie" path="../../"/>
         <MODULEPATH id="hi_faust" path="../../"/>
-        <MODULEPATH id="hi_faust_jit" path="../.."/>
-        <MODULEPATH id="hi_faust_types" path="../.."/>
-        <MODULEPATH id="hi_faust_lib" path="../.."/>
+        <MODULEPATH id="hi_faust_jit" path="../../"/>
+        <MODULEPATH id="hi_faust_types" path="../../"/>
+        <MODULEPATH id="hi_faust_lib" path="../../"/>
       </MODULEPATHS>
     </LINUX_MAKE>
   </EXPORTFORMATS>
